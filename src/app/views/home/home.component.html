@@ -1,0 +1,46 @@
+<div
+  class="flex fixed flex-wrap justify-center items-center w-full h-full left-0 top-0 pt-[30px] overflow-hidden"
+>
+  <div class="w-full flex justify-center flex-wrap">
+    <h2>Bienvenido a BookMasters</h2>
+    <img
+      src="./assets/img/homeImg1.png"
+      class="sm:w-[60%] w-full sm:mt-0 mt-[100px]"
+    />
+  </div>
+</div>
+
+<section class="w-full h-full flex justify-center items-center">
+  <mat-card class="w-[30%] min-w-[250px]">
+    <mat-card-header>
+      <mat-card-title><h3>Iniciar Sesión</h3></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="login()">
+        <mat-form-field class="w-full mb-2">
+          <mat-label>Correo</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Correo"
+            formControlName="email"
+          />
+          <mat-error>El campo es <strong>requerido</strong></mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full mb-2">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+          />
+          <mat-error>El campo es <strong>requerido</strong></mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">
+          Iniciar Sesión
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

@@ -6,7 +6,7 @@
     "paths": {
 
       "@pages/*": [
-        "src/app/pages/*"
+        "src/app/views/*"
       ],
       "@utilsFunctions/*": [
         "src/app/utils/*"

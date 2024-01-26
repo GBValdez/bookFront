@@ -1,0 +1,34 @@
+<h2 class="title">Crear Libro</h2>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Información General</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="flex justify-between flex-wrap">
+      <mat-form-field class="w-[45%]">
+        <mat-label>Titulo</mat-label>
+        <input matInput type="text" placeholder="Titulo" />
+      </mat-form-field>
+      <mat-form-field class="w-[45%]">
+        <mat-label>Dia de creación</mat-label>
+        <input matInput [matDatepicker]="picker" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="w-full mt-4">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          placeholder="Descripción"
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="2"
+          cdkAutosizeMaxRows="5"
+        ></textarea>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+</mat-card>
