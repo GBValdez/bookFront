@@ -1,0 +1,33 @@
+<nav
+  (mouseenter)="noCollapseMenu()"
+  (mouseleave)="collapseMenu()"
+  (touchEnd)="start()"
+  [ngClass]="{ navCollapse: collapseValue }"
+>
+  <section class="body">
+    <section class="header">
+      <img
+        [hidden]="!showElementsValue"
+        class="logo"
+        src="./assets/img/sat-logo-menu.png"
+        routerLink="/inicio"
+        title="Ir a pagina de bienvenida"
+      />
+      <img
+        [hidden]="showElementsValue"
+        class="logo-only"
+        src="./assets/img/sat-only-logo.png"
+        routerLink="/dashboard"
+        title="Ir a pagina de bienvenida"
+      />
+    </section>
+    <br />
+    <section class="menu">
+      <app-sub-level
+        [collapseObs]="getObsColapse()"
+        [showElementsObs]="getObsShowElements()"
+        [buttons]="buttons"
+      ></app-sub-level>
+    </section>
+  </section>
+</nav>

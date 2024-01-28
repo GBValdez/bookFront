@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@guards/auth.guard';
+import { AuthGuard } from '@guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,23 +11,43 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('@pages/home/home.component').then((m) => m.HomeComponent),
-    canLoad: [],
+    canActivate: [AuthGuard],
     data: { isProtect: 30 },
   },
   {
     path: 'books',
     loadComponent: () =>
-      import('@pages/book-home/book-home.component').then(
+      import('@pages/books/book-home/book-home.component').then(
         (m) => m.BookHomeComponent
       ),
-    canLoad: [],
+    canActivate: [AuthGuard],
     data: { isProtect: 20 },
   },
   {
     path: 'books/Create',
     loadComponent: () =>
-      import('@pages/book-create/book-create.component').then(
+      import('@pages/books/book-create/book-create.component').then(
         (m) => m.BookCreateComponent
       ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20 },
+  },
+  {
+    path: 'authors',
+    loadComponent: () =>
+      import('@pages/author/author-home/author-home.component').then(
+        (m) => m.AuthorHomeComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20 },
+  },
+  {
+    path: 'authors/Create',
+    loadComponent: () =>
+      import('@pages/author/author-create/author-create.component').then(
+        (m) => m.AuthorCreateComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20 },
   },
 ];

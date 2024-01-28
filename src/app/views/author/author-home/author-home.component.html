@@ -1,0 +1,27 @@
+<section class="flex justify-between">
+  <h2 class="title">Autores</h2>
+  <button mat-raised-button routerLink="Create">Crear autor</button>
+</section>
+<section class="flex flex-wrap jus">
+  @for (author of listAuthors; track $index) {
+  <mat-card class="w-[250px] m-[5px]">
+    <mat-card-header>
+      <mat-card-title
+        ><h3>
+          {{ author.name }}
+        </h3></mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <h4>Nacionalidad:</h4>
+        {{ author.country.name }}
+      </div>
+      <div>
+        <h4>Fecha nacimiento:</h4>
+        {{ author.birthDate | date : "dd/MM/yyyy" }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+</section>
