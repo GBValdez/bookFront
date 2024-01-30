@@ -1,10 +1,11 @@
 <section class="flex justify-between">
   <h2 class="title">Autores</h2>
-  <button mat-raised-button routerLink="Create">Crear autor</button>
+  <button mat-raised-button routerLink="create">Crear autor</button>
 </section>
-<section class="flex flex-wrap jus">
+@if(listAuthors.length>0){
+<section class="flex flex-wrap">
   @for (author of listAuthors; track $index) {
-  <mat-card class="w-[250px] m-[5px]">
+  <mat-card class="w-[250px] m-[5px] cursor-pointer" [matMenuTriggerFor]="menu">
     <mat-card-header>
       <mat-card-title
         ><h3>
@@ -23,5 +24,32 @@
       </div>
     </mat-card-content>
   </mat-card>
+  <mat-menu #menu="matMenu" xPosition="after">
+    <button mat-menu-item [routerLink]="'edit/' + author.id">
+      <mat-icon>edit</mat-icon>
+      <span>Editar</span>
+    </button>
+    <button mat-menu-item (click)="deleteAuthor(author)">
+      <mat-icon>delete</mat-icon>
+      <span>Borrar</span>
+    </button>
+  </mat-menu>
   }
 </section>
+<footer>
+  <mat-paginator
+    [length]="sizeAuthors"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 15, 20]"
+    class="rounded-xl"
+    (page)="changePagination($event)"
+  >
+  </mat-paginator>
+</footer>
+} @else{
+<img
+  class="sm:w-[40%] w-[90%] left-0 right-0 mx-auto rounded-3xl"
+  src="./assets/img/noFound.png"
+  alt=""
+/>
+}

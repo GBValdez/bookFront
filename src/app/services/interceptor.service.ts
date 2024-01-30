@@ -27,7 +27,7 @@ export class InterceptorService implements HttpInterceptor {
     let params = new HttpParams();
     req.params.keys().forEach((key) => {
       const value = req.params.get(key);
-      if (value !== null && value !== undefined && value !== '') {
+      if (value != null && value != undefined && value != '') {
         params = params.set(key, value);
       }
     });
@@ -41,11 +41,24 @@ export class InterceptorService implements HttpInterceptor {
     this.spinnerSvc.show();
     return next.handle(cloneRequest).pipe(
       catchError((error: HttpErrorResponse) => {
+        console.log(error);
         if (error.status === 401) {
           this.authService.logout();
         }
-        if (error.error.message)
+        if ((error.error.message = !undefined))
           Swal.fire('Error', error.error.message, 'error');
+        if (error.error.errors !== undefined) {
+          let messages: string = '';
+          const ERROR_OBJECT = error.error.errors;
+          for (const property in ERROR_OBJECT) {
+            let messageLocal: string = '';
+            ERROR_OBJECT[property].forEach((element: string) => {
+              messageLocal += element + '\n';
+            });
+            messages += messageLocal + '\n';
+          }
+          Swal.fire('Error', messages, 'error');
+        }
 
         return throwError(error);
       }),

@@ -42,12 +42,21 @@ export const routes: Routes = [
     data: { isProtect: 20 },
   },
   {
-    path: 'authors/Create',
+    path: 'authors/create',
     loadComponent: () =>
       import('@pages/author/author-create/author-create.component').then(
         (m) => m.AuthorCreateComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+  },
+  {
+    path: 'authors/edit/:id',
+    loadComponent: () =>
+      import('@pages/author/author-edit/author-edit.component').then(
+        (m) => m.AuthorEditComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
   },
 ];
