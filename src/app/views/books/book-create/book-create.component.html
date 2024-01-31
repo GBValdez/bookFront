@@ -5,11 +5,11 @@
   </mat-card-header>
   <mat-card-content>
     <form class="flex justify-between flex-wrap">
-      <mat-form-field class="w-[30%] min-w-[250px]">
+      <mat-form-field class="sm:w-[30%] w-[100%]">
         <mat-label>Titulo</mat-label>
         <input matInput type="text" Biografía="Titulo" />
       </mat-form-field>
-      <mat-form-field class="w-[30%] min-w-[250px]">
+      <mat-form-field class="sm:w-[30%] w-[100%]">
         <mat-label>Dia de creación</mat-label>
         <input matInput [matDatepicker]="picker" />
         <mat-hint>MM/DD/YYYY</mat-hint>
@@ -19,10 +19,13 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field class="w-[30%] min-w-[250px]">
+      <mat-form-field class="sm:w-[30%] w-[100%]">
         <mat-label>Numero de paginas</mat-label>
         <input matInput type="text" Biografía="Titulo" />
       </mat-form-field>
+      <app-input-autocomplete class="sm:w-[30%] w-[100%]">
+        Idioma
+      </app-input-autocomplete>
       <mat-form-field class="w-full mt-4">
         <mat-label>Descripción</mat-label>
         <textarea

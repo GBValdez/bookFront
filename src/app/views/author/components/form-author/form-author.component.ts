@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
 import { authorCreation } from '@interfaces/author.interface';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { AuthorsService } from '@services/authors.service';
@@ -32,14 +33,14 @@ import Swal from 'sweetalert2';
     MatNativeDateModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    InputAutocompleteComponent,
   ],
   templateUrl: './form-author.component.html',
   styleUrl: './form-author.component.scss',
 })
 export class FormAuthorComponent {
   @Output() saveAuthorEvent: EventEmitter<authorCreation> = new EventEmitter();
-  countryWriting: string = '';
-  countriesOptsFilter: catalogueInterface[] = [];
+  countriesOptsFilter: string[] = [];
   countriesOpts: catalogueInterface[] = [];
   form: FormGroup = this.fb.group({
     name: [
@@ -63,48 +64,33 @@ export class FormAuthorComponent {
   ngOnInit(): void {
     this.countrySvc.getCountries().subscribe((countries) => {
       this.countriesOpts = countries;
+      this.countriesOptsFilter = countries.map((country) => country.name);
     });
   }
-  filter(event: FocusEvent | Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.countryWriting = value;
-    this.countriesOptsFilter = this.countriesOpts.filter((country) =>
-      country.name.toLowerCase().includes(value.toLowerCase())
-    );
+
+  async noExistCountry(country: string) {
+    const RES = await Swal.fire({
+      title: `No existe el país "${country}"`,
+      text: '¿Desea agregarlo?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+    });
+    if (RES.isConfirmed)
+      this.countrySvc.createCountry({ name: country }).subscribe((res) => {
+        this.countriesOpts = [...this.countriesOpts, res];
+        this.countriesOptsFilter = [...this.countriesOptsFilter, res.name];
+        this.form.patchValue({ country: res.name });
+        Swal.fire({
+          title: 'País agregado',
+          text: 'El país ha sido agregado',
+          icon: 'success',
+          timer: 2000,
+        });
+      });
   }
-  noExistCountry(event: Event) {
-    setTimeout(async () => {
-      if (this.countryWriting.trim().length != 0) {
-        const country: catalogueInterface | undefined = this.countriesOpts.find(
-          (country) =>
-            country.name.toLowerCase() === this.countryWriting.toLowerCase()
-        );
-        if (!country) {
-          const RES = await Swal.fire({
-            title: `No existe el país "${this.countryWriting}"`,
-            text: '¿Desea agregarlo?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Si',
-            cancelButtonText: 'No',
-          });
-          if (RES.isConfirmed)
-            this.countrySvc
-              .createCountry({ name: this.countryWriting })
-              .subscribe((res) => {
-                this.countriesOpts = [...this.countriesOpts, res];
-                this.form.patchValue({ country: res.name });
-                Swal.fire({
-                  title: 'País agregado',
-                  text: 'El país ha sido agregado',
-                  icon: 'success',
-                  timer: 2000,
-                });
-              });
-        }
-      }
-    }, 10);
-  }
+
   clean(): void {
     this.form.patchValue({
       name: '',

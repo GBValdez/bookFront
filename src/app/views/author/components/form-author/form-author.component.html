@@ -25,14 +25,20 @@
         <mat-error>La primera letra debe ser mayúscula</mat-error>
         }
       </mat-form-field>
-      <mat-form-field class="sm:w-[30%] w-full">
+      <app-input-autocomplete
+        class="sm:w-[30%] w-full"
+        formControlName="country"
+        [options]="countriesOptsFilter"
+        (noExistOptionEvent)="noExistCountry($event)"
+        >País de origen</app-input-autocomplete
+      >
+      <!-- <mat-form-field class="sm:w-[30%] w-full">
         <mat-label>País de origen</mat-label>
         <input
           type="text"
           matInput
           [matAutocomplete]="auto"
           formControlName="country"
-          #autoComplete
           (focus)="filter($event)"
           (input)="filter($event)"
           (blur)="noExistCountry($event)"
@@ -43,7 +49,7 @@
           }
         </mat-autocomplete>
         <mat-error>El campo es <strong>requerido</strong></mat-error>
-      </mat-form-field>
+      </mat-form-field> -->
       <mat-form-field class="sm:w-[30%] w-full">
         <mat-label>Fecha de nacimiento</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="birthDate" />

@@ -7,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AuthorsService } from '@services/authors.service';
+import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
 
 @Component({
   selector: 'app-book-create',
@@ -19,12 +20,14 @@ import { AuthorsService } from '@services/authors.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
+    InputAutocompleteComponent,
   ],
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
 })
 export class BookCreateComponent implements OnInit {
   constructor(private authorSvc: AuthorsService) {}
+
   ngOnInit(): void {
     this.authorSvc.getAuthorByName('Gabr').subscribe((res) => {
       console.log(res);
