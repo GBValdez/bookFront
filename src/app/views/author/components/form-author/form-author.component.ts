@@ -40,7 +40,6 @@ import Swal from 'sweetalert2';
 })
 export class FormAuthorComponent {
   @Output() saveAuthorEvent: EventEmitter<authorCreation> = new EventEmitter();
-  countriesOptsFilter: string[] = [];
   countriesOpts: catalogueInterface[] = [];
   form: FormGroup = this.fb.group({
     name: [
@@ -52,7 +51,7 @@ export class FormAuthorComponent {
       ],
     ],
     birthDate: ['', [Validators.required]],
-    country: ['', [Validators.required]],
+    countryId: ['', [Validators.required]],
     biography: ['', [Validators.required, Validators.maxLength(500)]],
   });
   constructor(
@@ -65,7 +64,6 @@ export class FormAuthorComponent {
   ngOnInit(): void {
     this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
       this.countriesOpts = countries;
-      this.countriesOptsFilter = countries.map((country) => country.name);
     });
   }
 
@@ -83,8 +81,7 @@ export class FormAuthorComponent {
         .create({ name: country }, this.urlCatalogue)
         .subscribe((res) => {
           this.countriesOpts = [...this.countriesOpts, res];
-          this.countriesOptsFilter = [...this.countriesOptsFilter, res.name];
-          this.form.patchValue({ country: res.name });
+          this.form.patchValue({ country: res.id });
           Swal.fire({
             title: 'País agregado',
             text: 'El país ha sido agregado',
@@ -95,6 +92,7 @@ export class FormAuthorComponent {
   }
 
   clean(): void {
+    console.log(this.form.value);
     this.form.patchValue({
       name: '',
       birthDate: '',
@@ -116,16 +114,7 @@ export class FormAuthorComponent {
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
       });
-      if (RES.isConfirmed) {
-        const ID_COUNTRY: number = this.countriesOpts.find(
-          (country) => country.name === this.form.value.country
-        )!.id!;
-        const NEW_AUTHOR: authorCreation = this.form.value;
-        NEW_AUTHOR.countryId = ID_COUNTRY;
-        this.saveAuthorEvent.emit(NEW_AUTHOR);
-      }
-    } else {
-      this.form.markAllAsTouched();
-    }
+      if (RES.isConfirmed) this.saveAuthorEvent.emit(this.form.value);
+    } else this.form.markAllAsTouched();
   }
 }

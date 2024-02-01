@@ -9,15 +9,9 @@
     (input)="filter($event)"
     (blur)="noExistOption()"
   />
-  <mat-autocomplete
-    requireSelection
-    #auto="matAutocomplete"
-    (optionSelected)="selectOption($event.option.value)"
-  >
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayText">
     @for (item of optionsFilter; track item) {
-    <mat-option [value]="item" (onSelectionChange)="show(item)">{{
-      item
-    }}</mat-option>
+    <mat-option [value]="item">{{ item.name }}</mat-option>
     }
   </mat-autocomplete>
 

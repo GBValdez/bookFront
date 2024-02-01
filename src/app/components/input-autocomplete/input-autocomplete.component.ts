@@ -24,6 +24,7 @@ import {
 } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { catalogueInterface } from '@interfaces/commons.interface';
 
 @Component({
   selector: 'app-input-autocomplete',
@@ -36,13 +37,6 @@ import { MatInputModule } from '@angular/material/input';
   ],
   templateUrl: './input-autocomplete.component.html',
   styleUrl: './input-autocomplete.component.scss',
-  // providers: [
-  //   {
-  //     provide: NG_VALUE_ACCESSOR,
-  //     useExisting: forwardRef(() => InputAutocompleteComponent),
-  //     multi: true,
-  //   },
-  // ],
 })
 export class InputAutocompleteComponent
   implements OnInit, ControlValueAccessor
@@ -55,6 +49,10 @@ export class InputAutocompleteComponent
   }
 
   form = new FormControl();
+  currentValue: string = '';
+  @Input() options: catalogueInterface[] = [];
+  @Output() noExistOptionEvent: EventEmitter<string> = new EventEmitter();
+  optionsFilter: any[] = [];
 
   showErrors() {
     console.log(this.form.errors);
@@ -62,8 +60,13 @@ export class InputAutocompleteComponent
   onTouch?: Function;
   onWrite?: Function;
 
-  writeValue(values: string): void {
-    this.form.patchValue(values);
+  writeValue(value: number): void {
+    setTimeout(() => {
+      const opt: catalogueInterface = this.options.find(
+        (option) => option.id == value
+      )!;
+      this.form.patchValue(opt);
+    }, 10);
   }
   registerOnChange(fn: any): void {
     this.onWrite = fn;
@@ -71,7 +74,10 @@ export class InputAutocompleteComponent
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) this.form.disable();
+    else this.form.enable();
+  }
 
   ngOnInit(): void {
     if (this.ngControl?.control)
@@ -79,53 +85,41 @@ export class InputAutocompleteComponent
     this.form.updateValueAndValidity();
   }
 
-  currentValue: string = '';
-  @Input() options: string[] = [];
-  @Output() noExistOptionEvent: EventEmitter<string> = new EventEmitter();
-  optionsFilter: string[] = [];
   filter(event: FocusEvent | Event): void {
     setTimeout(() => {
       const value = (event.target as HTMLInputElement).value;
       this.currentValue = value;
-      const opt: string | undefined = this.options.find(
-        (opt) => opt.toLowerCase() === value.toLowerCase()
-      );
-      if (opt) {
-        this.onWrite?.(opt);
+      const optConst: number | undefined = this.options.find(
+        (opt) => opt.name.toLowerCase() === value.toLowerCase()
+      )?.id;
+      if (optConst) {
+        this.onWrite?.(optConst);
       } else {
         this.onWrite?.('');
         this.optionsFilter = this.options.filter((opt) =>
-          opt.toLowerCase().includes(value.toLowerCase())
+          opt.name.toLowerCase().includes(value.toLowerCase())
         );
       }
     }, 10);
   }
 
-  selectOption(option: string): void {
-    setTimeout(() => {
-      this.onWrite?.(option);
-      this.currentValue = option;
-    }, 10);
-    // this.optionsFilter = [];
+  displayText(option: catalogueInterface): string {
+    return option && option.name ? option.name : '';
   }
+
   noExistOption() {
     setTimeout(async () => {
       if (this.currentValue.trim().length == 0) return;
-      const opt: string | undefined = this.options.find(
-        (option) => option.toLowerCase() == this.currentValue.toLowerCase()
+      const opt: catalogueInterface | undefined = this.options.find(
+        (option) => option.name.toLowerCase() == this.currentValue.toLowerCase()
       );
-      console.log(opt, this.currentValue);
-      if (!opt) this.noExistOptionEvent.emit(this.currentValue);
-      else {
-        this.onWrite?.(opt);
-        this.form.patchValue(opt);
-        // setTimeout(() => {
-        // }, 10);
+      if (!opt) {
+        this.noExistOptionEvent.emit(this.currentValue);
+        this.form.patchValue('');
+      } else {
+        this.onWrite?.(opt.id);
       }
       this.onTouch?.();
-    }, 150);
-  }
-  show(a: string) {
-    console.log('showing ' + a);
+    }, 50);
   }
 }

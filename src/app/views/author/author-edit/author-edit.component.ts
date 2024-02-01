@@ -24,9 +24,11 @@ export class AuthorEditComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.actRoute.snapshot.params['id'];
     this.authorSvc.getAuthorById(this.id).subscribe((res) => {
-      this.formAuthor.form.patchValue(res);
       this.formAuthor.form.patchValue({
-        country: res.country.name,
+        name: res.name,
+        birthDate: res.birthDate,
+        countryId: res.country.id,
+        biography: res.biography,
       });
 
       console.log(res);

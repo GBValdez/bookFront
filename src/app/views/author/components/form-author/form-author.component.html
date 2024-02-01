@@ -27,8 +27,8 @@
       </mat-form-field>
       <app-input-autocomplete
         class="sm:w-[30%] w-full"
-        formControlName="country"
-        [options]="countriesOptsFilter"
+        formControlName="countryId"
+        [options]="countriesOpts"
         (noExistOptionEvent)="noExistCountry($event)"
         >País de origen</app-input-autocomplete
       >
