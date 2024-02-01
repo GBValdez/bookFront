@@ -23,4 +23,7 @@ export class BookService {
   post(data: bookCreationDto) {
     return this.httpClient.post(`${this.urlBase}`, data);
   }
+  put(id: number, data: bookCreationDto) {
+    return this.httpClient.put(`${this.urlBase}/${id}`, data);
+  }
 }

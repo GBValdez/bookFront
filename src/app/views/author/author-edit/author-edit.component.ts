@@ -30,8 +30,6 @@ export class AuthorEditComponent implements OnInit {
         countryId: res.country.id,
         biography: res.biography,
       });
-
-      console.log(res);
     });
   }
   save(body: authorCreation) {
