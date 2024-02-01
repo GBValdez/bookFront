@@ -26,7 +26,6 @@ import { Router } from '@angular/router';
 import { authorCreation } from '@interfaces/author.interface';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { AuthorsService } from '@services/authors.service';
-import { CountryService } from '@services/country.service';
 import { Observable, map, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
 import { FormAuthorComponent } from '../components/form-author/form-author.component';

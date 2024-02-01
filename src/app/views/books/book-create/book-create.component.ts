@@ -8,29 +8,17 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AuthorsService } from '@services/authors.service';
 import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
+import { FormBooksComponent } from '../components/form-books/form-books.component';
 
 @Component({
   selector: 'app-book-create',
   standalone: true,
-  imports: [
-    MatCardModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatAutocompleteModule,
-    InputAutocompleteComponent,
-  ],
+  imports: [FormBooksComponent],
   templateUrl: './book-create.component.html',
   styleUrl: './book-create.component.scss',
 })
 export class BookCreateComponent implements OnInit {
   constructor(private authorSvc: AuthorsService) {}
 
-  ngOnInit(): void {
-    this.authorSvc.getAuthorByName('Gabr').subscribe((res) => {
-      console.log(res);
-    });
-  }
+  ngOnInit(): void {}
 }

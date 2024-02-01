@@ -15,7 +15,9 @@
     (optionSelected)="selectOption($event.option.value)"
   >
     @for (item of optionsFilter; track item) {
-    <mat-option [value]="item">{{ item }}</mat-option>
+    <mat-option [value]="item" (onSelectionChange)="show(item)">{{
+      item
+    }}</mat-option>
     }
   </mat-autocomplete>
 

@@ -18,7 +18,10 @@ import {
   NgControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -71,7 +74,7 @@ export class InputAutocompleteComponent
   setDisabledState?(isDisabled: boolean): void {}
 
   ngOnInit(): void {
-    if (this.ngControl.control)
+    if (this.ngControl?.control)
       this.form.setValidators(this.ngControl.control.validator!);
     this.form.updateValueAndValidity();
   }
@@ -121,5 +124,8 @@ export class InputAutocompleteComponent
       }
       this.onTouch?.();
     }, 150);
+  }
+  show(a: string) {
+    console.log('showing ' + a);
   }
 }

@@ -18,7 +18,7 @@ import { InputAutocompleteComponent } from '@components/input-autocomplete/input
 import { authorCreation } from '@interfaces/author.interface';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { AuthorsService } from '@services/authors.service';
-import { CountryService } from '@services/country.service';
+import { CatalogueService } from '@services/catalogue.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -57,12 +57,13 @@ export class FormAuthorComponent {
   });
   constructor(
     private fb: FormBuilder,
-    private countrySvc: CountryService,
     private route: Router,
-    private authorSvc: AuthorsService
+    private authorSvc: AuthorsService,
+    private catalogueSvc: CatalogueService
   ) {}
+  urlCatalogue = 'country';
   ngOnInit(): void {
-    this.countrySvc.getCountries().subscribe((countries) => {
+    this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
       this.countriesOpts = countries;
       this.countriesOptsFilter = countries.map((country) => country.name);
     });
@@ -78,17 +79,19 @@ export class FormAuthorComponent {
       cancelButtonText: 'No',
     });
     if (RES.isConfirmed)
-      this.countrySvc.createCountry({ name: country }).subscribe((res) => {
-        this.countriesOpts = [...this.countriesOpts, res];
-        this.countriesOptsFilter = [...this.countriesOptsFilter, res.name];
-        this.form.patchValue({ country: res.name });
-        Swal.fire({
-          title: 'País agregado',
-          text: 'El país ha sido agregado',
-          icon: 'success',
-          timer: 2000,
+      this.catalogueSvc
+        .create({ name: country }, this.urlCatalogue)
+        .subscribe((res) => {
+          this.countriesOpts = [...this.countriesOpts, res];
+          this.countriesOptsFilter = [...this.countriesOptsFilter, res.name];
+          this.form.patchValue({ country: res.name });
+          Swal.fire({
+            title: 'País agregado',
+            text: 'El país ha sido agregado',
+            icon: 'success',
+            timer: 2000,
+          });
         });
-      });
   }
 
   clean(): void {
