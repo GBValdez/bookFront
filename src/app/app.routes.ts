@@ -24,10 +24,19 @@ export const routes: Routes = [
     data: { isProtect: 20 },
   },
   {
-    path: 'books/Create',
+    path: 'books/create',
     loadComponent: () =>
       import('@pages/books/book-create/book-create.component').then(
         (m) => m.BookCreateComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20 },
+  },
+  {
+    path: 'books/edit/:id',
+    loadComponent: () =>
+      import('@pages/books/book-edit/book-edit.component').then(
+        (m) => m.BookEditComponent
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20 },

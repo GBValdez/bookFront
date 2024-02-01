@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { authorCreation, authorDto } from '@interfaces/author.interface';
 import { pagDto } from '@interfaces/commons.interface';
+import { fixedQueryParams } from '@utilsFunctions/utils';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,11 +24,12 @@ export class AuthorsService {
     });
   }
   getAuthorById(id: number, all?: boolean): Observable<authorDto> {
-    const params: any = { all: all ?? '' };
+    const params: any = fixedQueryParams({ all });
     return this.http.get<authorDto>(`${this.urlBase}/${id}`, {
       params,
     });
   }
+
   getAuthorByName(name: string): Observable<authorDto[]> {
     return this.http.get<authorDto[]>(`${this.urlBase}/byName`, {
       params: {
