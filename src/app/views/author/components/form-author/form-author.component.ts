@@ -81,7 +81,7 @@ export class FormAuthorComponent {
         .create({ name: country }, this.urlCatalogue)
         .subscribe((res) => {
           this.countriesOpts = [...this.countriesOpts, res];
-          this.form.patchValue({ country: res.id });
+          this.form.patchValue({ countryId: res.id });
           Swal.fire({
             title: 'País agregado',
             text: 'El país ha sido agregado',
@@ -96,7 +96,7 @@ export class FormAuthorComponent {
     this.form.patchValue({
       name: '',
       birthDate: '',
-      country: '',
+      countryId: '',
       biography: '',
     });
   }

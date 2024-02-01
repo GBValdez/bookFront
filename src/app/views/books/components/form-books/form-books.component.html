@@ -31,6 +31,8 @@
         <app-input-autocomplete
           class="sm:w-[30%] w-[100%]"
           formControlName="languageId"
+          [options]="optLanguages"
+          (noExistOptionEvent)="noExistLanguage($event)"
         >
           Idioma
         </app-input-autocomplete>
@@ -51,10 +53,26 @@
 
   <mat-card class="mt-[5px] w-full">
     <mat-card-header>
-      <mat-card-title>Información de Autor</mat-card-title>
+      <mat-card-title>Autores</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <app-input-autocomplete>Buscar autor</app-input-autocomplete>
+      <app-list-maker-list
+        [listOpt]="optAuthors"
+        (foundingEvent)="foundingAuthor($event)"
+        formControlName="authorIds"
+      ></app-list-maker-list>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mt-[5px] w-full">
+    <mat-card-header>
+      <mat-card-title>Categorías</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-list-maker-list
+        [listOpt]="optAuthors"
+        (foundingEvent)="foundingAuthor($event)"
+        formControlName="authorIds"
+      ></app-list-maker-list>
     </mat-card-content>
   </mat-card>
 </form>

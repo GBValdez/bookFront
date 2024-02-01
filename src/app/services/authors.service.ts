@@ -28,8 +28,8 @@ export class AuthorsService {
       params,
     });
   }
-  getAuthorByName(name: string) {
-    return this.http.get(`${this.urlBase}/byName`, {
+  getAuthorByName(name: string): Observable<authorDto[]> {
+    return this.http.get<authorDto[]>(`${this.urlBase}/byName`, {
       params: {
         name,
       },

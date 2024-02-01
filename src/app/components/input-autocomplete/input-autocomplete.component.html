@@ -9,7 +9,11 @@
     (input)="filter($event)"
     (blur)="noExistOption()"
   />
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayText">
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayText"
+    (optionSelected)="selected($event)"
+  >
     @for (item of optionsFilter; track item) {
     <mat-option [value]="item">{{ item.name }}</mat-option>
     }

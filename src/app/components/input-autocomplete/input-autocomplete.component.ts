@@ -3,10 +3,12 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
   Self,
+  SimpleChanges,
   forwardRef,
 } from '@angular/core';
 import {
@@ -39,7 +41,7 @@ import { catalogueInterface } from '@interfaces/commons.interface';
   styleUrl: './input-autocomplete.component.scss',
 })
 export class InputAutocompleteComponent
-  implements OnInit, ControlValueAccessor
+  implements OnInit, ControlValueAccessor, OnChanges
 {
   constructor(
     private fb: FormBuilder,
@@ -47,11 +49,21 @@ export class InputAutocompleteComponent
   ) {
     if (this.ngControl) this.ngControl.valueAccessor = this;
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.noFilter)
+      if (changes['options']) {
+        this.optionsFilter = this.options;
+      }
+  }
 
   form = new FormControl();
   currentValue: string = '';
   @Input() options: catalogueInterface[] = [];
+  @Input() noFilter: boolean = false;
   @Output() noExistOptionEvent: EventEmitter<string> = new EventEmitter();
+  @Output() writingEvent: EventEmitter<string> = new EventEmitter();
+  @Output() selectedEvent: EventEmitter<catalogueInterface> =
+    new EventEmitter();
   optionsFilter: any[] = [];
 
   showErrors() {
@@ -88,6 +100,7 @@ export class InputAutocompleteComponent
   filter(event: FocusEvent | Event): void {
     setTimeout(() => {
       const value = (event.target as HTMLInputElement).value;
+      this.writingEvent.emit(value);
       this.currentValue = value;
       const optConst: number | undefined = this.options.find(
         (opt) => opt.name.toLowerCase() === value.toLowerCase()
@@ -96,9 +109,11 @@ export class InputAutocompleteComponent
         this.onWrite?.(optConst);
       } else {
         this.onWrite?.('');
-        this.optionsFilter = this.options.filter((opt) =>
-          opt.name.toLowerCase().includes(value.toLowerCase())
-        );
+        if (!this.noFilter)
+          this.optionsFilter = this.options.filter((opt) =>
+            opt.name.toLowerCase().includes(value.toLowerCase())
+          );
+        else this.optionsFilter = this.options;
       }
     }, 10);
   }
@@ -121,5 +136,9 @@ export class InputAutocompleteComponent
       }
       this.onTouch?.();
     }, 50);
+  }
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.selectedEvent.emit(event.option.value);
+    this.onWrite?.(event.option.value);
   }
 }
