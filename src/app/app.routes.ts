@@ -42,6 +42,15 @@ export const routes: Routes = [
     data: { isProtect: 20 },
   },
   {
+    path: 'books/detail/:id',
+    loadComponent: () =>
+      import('@pages/books/book-detail/book-detail.component').then(
+        (m) => m.BookDetailComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20 },
+  },
+  {
     path: 'authors',
     loadComponent: () =>
       import('@pages/author/author-home/author-home.component').then(
@@ -64,6 +73,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@pages/author/author-edit/author-edit.component').then(
         (m) => m.AuthorEditComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+  },
+  {
+    path: 'authors/detail/:id',
+    loadComponent: () =>
+      import('@pages/author/author-detail/author-detail.component').then(
+        (m) => m.AuthorDetailComponent
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },

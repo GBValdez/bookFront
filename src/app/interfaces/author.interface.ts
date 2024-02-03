@@ -1,3 +1,4 @@
+import { bookDto } from './book.interface';
 import { catalogueInterface } from './commons.interface';
 
 export interface authorCreation {
@@ -10,7 +11,7 @@ export interface authorCreation {
 export interface authorDto {
   id: number;
   name: string;
-  books: any[];
+  books: bookDto[];
   country: catalogueInterface;
   biography: string;
   birthDate: Date;

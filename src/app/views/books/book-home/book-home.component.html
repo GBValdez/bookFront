@@ -1,19 +1,71 @@
 <section class="flex justify-between">
-  <h2 class="title">Biblioteca de libros</h2>
-  <button mat-raised-button routerLink="Create">Agregar Libro</button>
+  <h2 class="title">Libros</h2>
+  <button mat-raised-button routerLink="create">Crear Libro</button>
 </section>
-<section>
-  <mat-form-field class="w-full">
-    <mat-label>Buscar</mat-label>
-    <input matInput type="text" Biografía="Buscar" />
-  </mat-form-field>
+@if(bookList.length>0){
+<section class="flex flex-wrap sm:justify-between justify-center">
+  @for (book of bookList; track $index) {
+  <mat-card
+    style="cursor: pointer"
+    class="sm:w-[45%] w-full m-[5px]"
+    [matMenuTriggerFor]="menu"
+  >
+    <mat-card-header>
+      <mat-card-title
+        ><h3>
+          {{ book.title }}
+        </h3></mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <div class="flex flex-wrap">
+        <div class="w-[120px]">
+          <h4>Idioma:</h4>
+          {{ book.language.name }}
+        </div>
+        <div class="w-[170px]">
+          <h4>Fecha de creación:</h4>
+          {{ book.dateCreation | date : "dd/MM/yyyy" }}
+        </div>
+        <div class="w-[160px]">
+          <h4>Numero de paginas:</h4>
+          {{ book.numPages }}
+        </div>
+      </div>
+      <div class="w-full mt-1 overflow-x-auto box-border h-[32px]">
+        @for (category of book.categories; track $index) {
+        <mat-chip class="mr-2 sm:mb-0 mb-2"> {{ category.name }}</mat-chip>
+
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-menu #menu="matMenu" xPosition="after">
+    <button mat-menu-item [routerLink]="'edit/' + book.id">
+      <mat-icon>edit</mat-icon>
+      <span>Editar</span>
+    </button>
+    <button mat-menu-item (click)="deleteBook(book)">
+      <mat-icon>delete</mat-icon>
+      <span>Borrar</span>
+    </button>
+  </mat-menu>
+  }
 </section>
-<mat-card class="w-[300px]">
-  <mat-card-header>
-    <mat-card-title>Libro 1</mat-card-title>
-    <mat-card-subtitle>Subtitulo</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <p>Book Home</p>
-  </mat-card-content>
-</mat-card>
+<footer>
+  <mat-paginator
+    [length]="sizeBooks"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 15, 20]"
+    class="rounded-xl"
+    (page)="changePagination($event)"
+  >
+  </mat-paginator>
+</footer>
+} @else{
+<img
+  class="sm:w-[40%] w-[90%] left-0 right-0 mx-auto rounded-3xl"
+  src="./assets/img/noFound.png"
+  alt=""
+/>
+}
