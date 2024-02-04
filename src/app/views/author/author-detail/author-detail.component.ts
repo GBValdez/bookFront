@@ -36,16 +36,16 @@ export class AuthorDetailComponent implements OnInit {
     });
   }
 
-  async deleteAuthor(author: authorDto) {
+  async delete() {
     const result = await Swal.fire({
-      title: `'¿Desea eliminar el autor "${author.name}"?'`,
+      title: `'¿Desea eliminar el autor "${this.author.name}"?'`,
       showCancelButton: true,
       icon: 'question',
       confirmButtonText: 'Si',
       cancelButtonText: 'No',
     });
     if (result.isConfirmed) {
-      this.authorSvc.deleteAuthor(author.id).subscribe(async (res) => {
+      this.authorSvc.deleteAuthor(this.author.id).subscribe(async (res) => {
         await Swal.fire({
           title: 'El autor fue eliminado correctamente',
           icon: 'success',

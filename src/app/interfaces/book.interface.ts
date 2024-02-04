@@ -1,4 +1,5 @@
 import { authorDto } from './author.interface';
+import { commentsDto } from './comments.interface';
 import { catalogueInterface } from './commons.interface';
 
 export interface bookCreationDto {
@@ -17,7 +18,7 @@ export interface bookDto {
   dateCreation: Date;
   numPages: number;
   language: catalogueInterface;
-  comments: any[];
+  comments: commentsDto[];
   authors: authorDto[];
   categories: catalogueInterface[];
 }

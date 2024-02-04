@@ -41,6 +41,10 @@
     </mat-card-content>
   </mat-card>
   <mat-menu #menu="matMenu" xPosition="after">
+    <button mat-menu-item [routerLink]="'detail/' + book.id">
+      <mat-icon>remove_red_eye</mat-icon>
+      <span>Ver mas</span>
+    </button>
     <button mat-menu-item [routerLink]="'edit/' + book.id">
       <mat-icon>edit</mat-icon>
       <span>Editar</span>
