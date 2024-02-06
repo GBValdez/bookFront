@@ -45,6 +45,7 @@ export class HomeComponent {
     if (this.form.valid) {
       this.loginSvc.login(this.form.value).subscribe((res) => {
         const decoded: any = jwtDecode(res.token);
+        console.log(decoded);
         const newUser: authUserInterface = {
           token: res.token,
           expiration: res.expiration,
@@ -53,7 +54,12 @@ export class HomeComponent {
             decoded[
               'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
             ],
+          userName:
+            decoded[
+              'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+            ],
         };
+        console.log(newUser);
         this.authService.auth = newUser;
         this.router.navigate(['/books']);
       });

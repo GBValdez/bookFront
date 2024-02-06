@@ -10,9 +10,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { bookDto } from '@interfaces/book.interface';
+import { commentsDto } from '@interfaces/comments.interface';
+import { AuthService } from '@services/auth.service';
 import { BookService } from '@services/book.service';
 import { CommentsService } from '@services/comments.service';
 import Swal from 'sweetalert2';
@@ -29,6 +33,8 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
+    MatIconModule,
+    MatMenuModule,
   ],
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss',
@@ -44,19 +50,42 @@ export class BookDetailComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private commentSvc: CommentsService
+    private commentSvc: CommentsService,
+    private authSvc: AuthService
   ) {}
   ngOnInit(): void {
     this.id = this.actRoute.snapshot.params['id'];
     this.getBook();
   }
   book!: bookDto;
+  comments: commentsDto[] = [];
+  indexComments: number = 1;
+  numPageComments!: number;
   getBook() {
     this.bookSvc.get(this.id, true).subscribe((book) => {
       this.book = book;
-      console.log(book);
+      this.getComments();
     });
   }
+  getComments() {
+    this.commentSvc.getAll(this.indexComments, 5, this.id).subscribe((res) => {
+      const resFiltered = res.items.filter((comment) => {
+        return !this.comments.some(
+          (c) =>
+            c.content === comment.content &&
+            c.user.userName === comment.user.userName
+        );
+      });
+      this.comments = [...this.comments, ...resFiltered];
+      this.numPageComments = res.totalPages;
+      console.log(this.numPageComments, this.indexComments);
+    });
+  }
+  moreComments() {
+    this.indexComments++;
+    this.getComments();
+  }
+
   async deleteBook() {
     const result = await Swal.fire({
       title: `'¿Desea eliminar el autor "${this.book.title}"?'`,
@@ -79,7 +108,6 @@ export class BookDetailComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    console.log(this.form.value);
     const result = await Swal.fire({
       title: '¿Desea enviar el comentario?',
       showCancelButton: true,
@@ -89,12 +117,33 @@ export class BookDetailComponent implements OnInit {
     });
     if (result.isConfirmed) {
       this.commentSvc.post(this.form.value, this.id).subscribe((res) => {
-        this.getBook();
-        this.form.patchValue({ comment: '' });
         Swal.fire({
           title: 'El comentario fue enviado correctamente',
           icon: 'success',
         });
+        this.form.patchValue({ content: '' });
+
+        res.user = { userName: this.authSvc.auth!.userName!, email: '' };
+        this.comments = [...this.comments, res];
+        console.log('respuesta', res);
+      });
+    }
+  }
+  async deleteComment(comment: commentsDto) {
+    const result = await Swal.fire({
+      title: '¿Desea eliminar el comentario?',
+      showCancelButton: true,
+      icon: 'question',
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+    });
+    if (result.isConfirmed) {
+      this.commentSvc.delete(comment.id, this.id).subscribe((res) => {
+        Swal.fire({
+          title: 'El comentario fue eliminado correctamente',
+          icon: 'success',
+        });
+        this.comments = this.comments.filter((c) => c.id !== comment.id);
       });
     }
   }

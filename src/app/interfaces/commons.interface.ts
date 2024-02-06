@@ -6,4 +6,5 @@ export interface pagDto<T> {
   items: T[];
   total: number;
   index: number;
+  totalPages: number;
 }

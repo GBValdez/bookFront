@@ -5,6 +5,8 @@ import {
   commentsDto,
   commentsDtoCreation,
 } from '@interfaces/comments.interface';
+import { pagDto } from '@interfaces/commons.interface';
+import { fixedQueryParams } from '@utilsFunctions/utils';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -19,5 +21,19 @@ export class CommentsService {
       `${this.url}/${bookId}/comments`,
       comment
     );
+  }
+  getAll(
+    pageNumber: number,
+    pageSize: number,
+    bookId: number
+  ): Observable<pagDto<commentsDto>> {
+    const params = fixedQueryParams({ pageNumber, pageSize });
+    return this.httpClient.get<pagDto<commentsDto>>(
+      `${this.url}/${bookId}/comments`,
+      { params }
+    );
+  }
+  delete(id: number, bookId: number) {
+    return this.httpClient.delete(`${this.url}/${bookId}/comments/${id}`);
   }
 }

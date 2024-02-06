@@ -3,4 +3,5 @@ export interface authUserInterface {
   token: string;
   expiration: Date;
   roles: string[];
+  userName: string;
 }

@@ -73,17 +73,44 @@
 
 <mat-card class="mt-3">
   <mat-card-content>
-    <section class="flex w-full flex-wrap">
-      <h3 class="w-full">Comentarios</h3>
+    <h3 class="w-full">Comentarios</h3>
+
+    <section class="flex w-full flex-wrap max-h-[70vh] overflow-y-auto">
       <div class="w-full mt-2">
-        @if (book.comments.length!=0) { @for (comment of book.comments; track
-        $index) {
+        @if (comments.length!=0) { @for (comment of comments; track $index) {
         <div>
-          <h4>{{ comment.user.userName }}</h4>
+          <h4 class="flex items-center">
+            <span class="mr-2">
+              {{ comment.user.userName }}
+            </span>
+            @if(comment.id!=-1){
+            <mat-icon class="cursor-pointer" [matMenuTriggerFor]="menu"
+              >edit</mat-icon
+            >
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item (click)="deleteComment(comment)">
+                <mat-icon>delete</mat-icon>
+                <span>Borrar</span>
+              </button>
+            </mat-menu>
+            }
+          </h4>
           <p class="break-words">{{ comment.content }}</p>
         </div>
 
-        } } @else {
+        }
+        @if (indexComments<numPageComments) {
+          <div class="my-2 w-full flex justify-center">
+            <button mat-raised-button (click)="moreComments()">
+              Ver mas comentarios
+            </button>
+          </div>
+        }
+      } @else {
         <p class="w-full">No hay comentarios registrados</p>
         }
       </div>

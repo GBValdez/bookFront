@@ -18,7 +18,6 @@ export interface bookDto {
   dateCreation: Date;
   numPages: number;
   language: catalogueInterface;
-  comments: commentsDto[];
   authors: authorDto[];
   categories: catalogueInterface[];
 }
