@@ -41,6 +41,7 @@ import Swal from 'sweetalert2';
 })
 export class BookDetailComponent implements OnInit {
   id!: number;
+  idCommentEdit?: number;
   form: FormGroup = this.fb.group({
     content: ['', [Validators.required, Validators.maxLength(600)]],
   });
@@ -81,6 +82,15 @@ export class BookDetailComponent implements OnInit {
       console.log(this.numPageComments, this.indexComments);
     });
   }
+
+  clickButtonEditComment(comment: commentsDto) {
+    this.idCommentEdit = comment.id;
+    this.form.patchValue({ content: comment.content });
+  }
+  cancelEditComment() {
+    this.idCommentEdit = undefined;
+    this.form.patchValue({ content: '' });
+  }
   moreComments() {
     this.indexComments++;
     this.getComments();
@@ -108,25 +118,49 @@ export class BookDetailComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    const MESSAGE: string = this.idCommentEdit ? 'editar' : 'enviar';
     const result = await Swal.fire({
-      title: '¿Desea enviar el comentario?',
+      title: `¿Desea ${MESSAGE} el comentario?`,
       showCancelButton: true,
       icon: 'question',
       confirmButtonText: 'Si',
       cancelButtonText: 'No',
     });
     if (result.isConfirmed) {
-      this.commentSvc.post(this.form.value, this.id).subscribe((res) => {
-        Swal.fire({
-          title: 'El comentario fue enviado correctamente',
-          icon: 'success',
+      if (this.idCommentEdit) {
+        this.commentSvc.update(this.form.value, this.idCommentEdit).subscribe(
+          (res) => {
+            Swal.fire({
+              title: 'El comentario fue editado correctamente',
+              icon: 'success',
+            });
+            this.comments = this.comments.map((c) => {
+              if (c.id === this.idCommentEdit) {
+                c.content = this.form.value.content;
+              }
+              return c;
+            });
+            this.idCommentEdit = undefined;
+            this.form.patchValue({ content: '' });
+          },
+          (err) => {
+            Swal.fire({
+              title: 'Error al editar el comentario',
+              icon: 'error',
+            });
+          }
+        );
+      } else
+        this.commentSvc.post(this.form.value, this.id).subscribe((res) => {
+          Swal.fire({
+            title: 'El comentario fue enviado correctamente',
+            icon: 'success',
+          });
+          this.form.patchValue({ content: '' });
+          res.user = { userName: this.authSvc.auth!.userName!, email: '' };
+          this.comments = [...this.comments, res];
+          console.log('respuesta', res);
         });
-        this.form.patchValue({ content: '' });
-
-        res.user = { userName: this.authSvc.auth!.userName!, email: '' };
-        this.comments = [...this.comments, res];
-        console.log('respuesta', res);
-      });
     }
   }
   async deleteComment(comment: commentsDto) {

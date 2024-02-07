@@ -36,4 +36,7 @@ export class CommentsService {
   delete(id: number, bookId: number) {
     return this.httpClient.delete(`${this.url}/${bookId}/comments/${id}`);
   }
+  update(comment: commentsDtoCreation, commentId: number) {
+    return this.httpClient.put(`${this.url}/0/comments/${commentId}`, comment);
+  }
 }

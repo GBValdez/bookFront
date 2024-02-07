@@ -31,7 +31,6 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule,
     ReactiveFormsModule,
     InputAutocompleteComponent,
   ],
@@ -64,6 +63,7 @@ export class FormAuthorComponent {
   ngOnInit(): void {
     this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
       this.countriesOpts = countries;
+      console.log(this.countriesOpts);
     });
   }
 

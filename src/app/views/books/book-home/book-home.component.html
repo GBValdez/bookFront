@@ -3,6 +3,82 @@
   <button mat-raised-button routerLink="create">Crear Libro</button>
 </section>
 @if(bookList.length>0){
+<mat-card class="w-full">
+  <mat-card-content>
+    <form
+      (ngSubmit)="searchBooks()"
+      class="flex sm:justify-between justify-center flex-wrap w-full"
+      [formGroup]="form"
+    >
+      <mat-form-field class="sm:w-[30%] w-full">
+        <mat-label>Titulo </mat-label>
+        <input matInput placeholder="Titulo" formControlName="titleCont" />
+      </mat-form-field>
+      <mat-form-field class="sm:w-[30%] w-full">
+        <mat-label>Fecha de creación</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input
+            matStartDate
+            placeholder="Start date"
+            formControlName="dateCreationGreat"
+          />
+          <input
+            matEndDate
+            placeholder="End date"
+            formControlName="dateCreationSmall"
+          />
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <app-input-autocomplete
+        class="sm:w-[30%] w-full"
+        formControlName="languageId"
+        [options]="languagesOpts"
+        >Idioma</app-input-autocomplete
+      >
+      <mat-form-field class="sm:w-[30%] w-full">
+        <mat-label>Numero de paginas </mat-label>
+        <input
+          matInput
+          placeholder="Numero de paginas"
+          formControlName="numPages"
+        />
+      </mat-form-field>
+      <mat-form-field class="sm:w-[30%] w-full">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoriesId" multiple>
+          @for (category of categoriesOpts; track category) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="flex justify-end w-full flex-wrap">
+        <button
+          mat-raised-button
+          class="ml-[5px] mt-[5px]"
+          type="button"
+          (click)="cleanFilters()"
+        >
+          Limpiar
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="ml-[5px] mt-[5px]"
+          type="submit"
+        >
+          Buscar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
 <section class="flex flex-wrap sm:justify-between justify-center">
   @for (book of bookList; track $index) {
   <mat-card

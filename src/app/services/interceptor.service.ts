@@ -40,12 +40,12 @@ export class InterceptorService implements HttpInterceptor {
     });
     this.spinnerSvc.show();
     return next.handle(cloneRequest).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.log(error);
+      catchError((error: any) => {
+        console.log('errorSensual', error);
         if (error.status === 401) {
           this.authService.logout();
         }
-        if ((error.error.message = !undefined))
+        if (error.error.message !== undefined)
           Swal.fire('Error', error.error.message, 'error');
         if (error.error.errors !== undefined) {
           let messages: string = '';

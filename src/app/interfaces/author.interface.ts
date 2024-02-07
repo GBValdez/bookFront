@@ -16,3 +16,10 @@ export interface authorDto {
   biography: string;
   birthDate: Date;
 }
+
+export interface authorQueryFilter {
+  nameCont?: string;
+  birthDateGreat?: Date;
+  birthDateSmall?: Date;
+  countryId?: number;
+}

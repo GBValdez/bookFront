@@ -32,24 +32,6 @@
         (noExistOptionEvent)="noExistCountry($event)"
         >País de origen</app-input-autocomplete
       >
-      <!-- <mat-form-field class="sm:w-[30%] w-full">
-        <mat-label>País de origen</mat-label>
-        <input
-          type="text"
-          matInput
-          [matAutocomplete]="auto"
-          formControlName="country"
-          (focus)="filter($event)"
-          (input)="filter($event)"
-          (blur)="noExistCountry($event)"
-        />
-        <mat-autocomplete requireSelection #auto="matAutocomplete">
-          @for (item of countriesOptsFilter; track item) {
-          <mat-option [value]="item.name">{{ item.name }}</mat-option>
-          }
-        </mat-autocomplete>
-        <mat-error>El campo es <strong>requerido</strong></mat-error>
-      </mat-form-field> -->
       <mat-form-field class="sm:w-[30%] w-full">
         <mat-label>Fecha de nacimiento</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="birthDate" />

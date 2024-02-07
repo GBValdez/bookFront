@@ -21,3 +21,11 @@ export interface bookDto {
   authors: authorDto[];
   categories: catalogueInterface[];
 }
+
+export interface bookQueryFilter {
+  titleCont?: string;
+  dateCreationGreat?: Date;
+  dateCreationSmall?: Date;
+  numPages?: number;
+  languageId?: number;
+}
