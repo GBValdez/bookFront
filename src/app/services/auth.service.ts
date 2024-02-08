@@ -1,9 +1,10 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { authUserInterface } from '@interfaces/auth.inteface';
 import { AES, enc } from 'crypto-js';
 import { CookieService } from 'ngx-cookie-service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +15,29 @@ export class AuthService {
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router
   ) {}
-  set auth(newAuth: authUserInterface) {
+  authObs: BehaviorSubject<authUserInterface | null> =
+    new BehaviorSubject<authUserInterface | null>(null);
+
+  getObservable(): Observable<authUserInterface | null> {
+    return this.authObs.asObservable();
+  }
+  nextAuth(auth: authUserInterface | null) {
+    this.authObs.next(auth);
+  }
+
+  setAuth(newAuth: authUserInterface) {
     const authBody = AES.encrypt(
       JSON.stringify(newAuth),
       environment.key
     ).toString();
     this.cookiesSvc.set('auth', authBody, 1);
+    this.authObs.next(newAuth);
   }
-  get auth(): authUserInterface | null {
+  getAuth(): authUserInterface | null {
     const authBody: string = this.cookiesSvc.get('auth');
-    if (authBody != null && authBody != '') {
+    console.log('authBody', authBody);
+    const valid = authBody.trim().length > 0 && authBody != '';
+    if (authBody.trim().length > 0 && authBody != '') {
       const DECRYPT_TEXT: string = AES.decrypt(
         authBody,
         environment.key
@@ -34,7 +48,7 @@ export class AuthService {
   }
   logout() {
     this.cookiesSvc.delete('auth');
-    // this.router.navigate(['/home']);
-    console.log('logout');
+    this.authObs.next(null);
+    this.router.navigate(['/home']);
   }
 }

@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { authorDto } from '@interfaces/author.interface';
+import { AuthService } from '@services/auth.service';
 import { AuthorsService } from '@services/authors.service';
 import Swal from 'sweetalert2';
 
@@ -25,15 +26,19 @@ export class AuthorDetailComponent implements OnInit {
   constructor(
     private authorSvc: AuthorsService,
     private actRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authSvc: AuthService
   ) {}
   public author!: authorDto;
+  canEdit: boolean = false;
   ngOnInit(): void {
     const id = this.actRoute.snapshot.params['id'];
     this.authorSvc.getAuthorById(id, true).subscribe((res) => {
       this.author = res;
-      console.log(this.author);
     });
+    if (this.authSvc.getAuth()) {
+      this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
+    }
   }
 
   async delete() {

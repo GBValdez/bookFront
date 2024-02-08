@@ -1,8 +1,9 @@
+@if(canEdit){
 <section class="flex justify-between">
   <h2 class="title">Libros</h2>
   <button mat-raised-button routerLink="create">Crear Libro</button>
 </section>
-@if(bookList.length>0){
+} @if(bookList.length>0){
 <mat-card class="w-full">
   <mat-card-content>
     <form
@@ -19,12 +20,12 @@
         <mat-date-range-input [rangePicker]="picker">
           <input
             matStartDate
-            placeholder="Start date"
+            placeholder="Dia de inicio"
             formControlName="dateCreationGreat"
           />
           <input
             matEndDate
-            placeholder="End date"
+            placeholder="Dia final"
             formControlName="dateCreationSmall"
           />
         </mat-date-range-input>
@@ -44,6 +45,7 @@
       <mat-form-field class="sm:w-[30%] w-full">
         <mat-label>Numero de paginas </mat-label>
         <input
+          appOnlyNumberInput
           matInput
           placeholder="Numero de paginas"
           formControlName="numPages"
@@ -71,6 +73,7 @@
           color="primary"
           class="ml-[5px] mt-[5px]"
           type="submit"
+          [disabled]="form.invalid"
         >
           Buscar
         </button>
@@ -121,6 +124,7 @@
       <mat-icon>remove_red_eye</mat-icon>
       <span>Ver mas</span>
     </button>
+    @if(canEdit){
     <button mat-menu-item [routerLink]="'edit/' + book.id">
       <mat-icon>edit</mat-icon>
       <span>Editar</span>
@@ -129,6 +133,7 @@
       <mat-icon>delete</mat-icon>
       <span>Borrar</span>
     </button>
+    }
   </mat-menu>
   }
 </section>

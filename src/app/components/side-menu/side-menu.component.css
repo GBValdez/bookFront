@@ -13,7 +13,7 @@
 nav {
   width: 300px;
   position: fixed;
-  background: #186ca4;
+  background: rgb(75, 0, 52);
   height: 100vh;
   overflow-y: auto;
 
@@ -28,28 +28,29 @@ nav {
 }
 
 .logo {
-  cursor: pointer;
-  margin-top: 5px;
-  width: 150px;
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(307deg)
-    brightness(105%) contrast(101%);
+  width: 40px;
+  border-radius: 50%;
+}
+h3 {
+  color: white;
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0;
 }
 .logo-only {
-  cursor: pointer;
-
-  margin-top: 5px;
+  border-radius: 50%;
   margin-bottom: 10px;
   width: 40px;
   height: 40px;
   margin-top: 7px;
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(307deg)
-    brightness(105%) contrast(101%);
 }
 .header {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 5px;
 }
 .menu {
   overflow-y: auto;

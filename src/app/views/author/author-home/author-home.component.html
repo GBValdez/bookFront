@@ -1,8 +1,10 @@
+@if(canAddAuthor){
 <section class="flex justify-between">
   <h2 class="title">Autores</h2>
   <button mat-raised-button routerLink="create">Crear autor</button>
 </section>
-@if(listAuthors.length>0){
+
+} @if(listAuthors.length>0){
 <mat-card class="w-full">
   <mat-card-content>
     <form
@@ -19,12 +21,12 @@
         <mat-date-range-input [rangePicker]="picker">
           <input
             matStartDate
-            placeholder="Start date"
+            placeholder="Dia de inicio"
             formControlName="birthDateGreat"
           />
           <input
             matEndDate
-            placeholder="End date"
+            placeholder="Dia final"
             formControlName="birthDateSmall"
           />
         </mat-date-range-input>
@@ -55,6 +57,7 @@
           color="primary"
           class="ml-[5px] mt-[5px]"
           type="submit"
+          [disabled]="form.invalid"
         >
           Buscar
         </button>
@@ -88,6 +91,7 @@
       <mat-icon>remove_red_eye</mat-icon>
       <span>Ver mas</span>
     </button>
+    @if(canAddAuthor){
     <button mat-menu-item [routerLink]="'edit/' + author.id">
       <mat-icon>edit</mat-icon>
       <span>Editar</span>
@@ -96,6 +100,7 @@
       <mat-icon>delete</mat-icon>
       <span>Borrar</span>
     </button>
+    }
   </mat-menu>
   }
 </section>

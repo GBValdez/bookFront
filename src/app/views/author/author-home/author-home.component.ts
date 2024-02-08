@@ -17,6 +17,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CatalogueService } from '@services/catalogue.service';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
+import { OnlyNumberInputModule } from '@directives/onlyNumberDir/only-number-input.module';
+import { formIsEmptyValidator } from '@utilsFunctions/utils';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-author-home',
@@ -43,7 +46,8 @@ export class AuthorHomeComponent implements OnInit {
   constructor(
     private authorSvc: AuthorsService,
     private catalogueSvc: CatalogueService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authSvc: AuthService
   ) {}
   listAuthors: authorDto[] = [];
   sizeAuthors: number = 0;
@@ -51,21 +55,23 @@ export class AuthorHomeComponent implements OnInit {
   pageSize: number = 10;
   countriesOpts: catalogueInterface[] = [];
   urlCatalogue = 'country';
-
-  form: FormGroup = this.fb.group({
-    nameCont: [],
-    birthDateGreat: [],
-    birthDateSmall: [],
-    countryId: [],
-  });
+  canAddAuthor: boolean = false;
+  form: FormGroup = this.fb.group(
+    {
+      nameCont: [],
+      birthDateGreat: [],
+      birthDateSmall: [],
+      countryId: [],
+    },
+    { validators: formIsEmptyValidator() }
+  );
   formValues: authorQueryFilter = {};
   cleanFilters() {
-    console.log(this.form.value);
     this.form.patchValue({
-      nameCont: '',
-      birthDateGreat: '',
-      birthDateSmall: '',
-      countryId: '',
+      nameCont: null,
+      birthDateGreat: null,
+      birthDateSmall: null,
+      countryId: null,
     });
     this.formValues = {};
     this.getAuthors(1, 10);
@@ -73,14 +79,17 @@ export class AuthorHomeComponent implements OnInit {
 
   searchAuthors() {
     this.formValues = this.form.value;
-    if (this.formValues.birthDateGreat) {
-      this.formValues.birthDateGreat.setHours(23, 59, 59, 999);
-    }
-    console.log(this.formValues);
+    if (this.formValues.birthDateSmall)
+      this.formValues.birthDateSmall.setHours(23, 59, 59, 999);
+
     this.getAuthors(1, 10);
   }
 
   ngOnInit(): void {
+    if (this.authSvc.getAuth())
+      this.canAddAuthor = this.authSvc
+        .getAuth()!
+        .roles.includes('ADMINISTRATOR');
     this.getAuthors(1, 10);
     this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
       this.countriesOpts = countries;

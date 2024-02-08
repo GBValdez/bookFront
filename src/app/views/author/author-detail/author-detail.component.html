@@ -57,8 +57,9 @@
         type="button"
         routerLink="/authors"
       >
-        Cancelar
+        Cerrar
       </button>
+      @if(canEdit){
       <button
         mat-raised-button
         color="warn"
@@ -77,6 +78,7 @@
       >
         Editar
       </button>
+      }
     </section>
   </mat-card-content>
 </mat-card>

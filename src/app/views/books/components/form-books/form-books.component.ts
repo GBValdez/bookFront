@@ -95,7 +95,6 @@ export class FormBooksComponent implements OnInit {
   cleanPropertiesForm(prop: string): void {
     let object: any = {};
     object[prop] = [];
-    console.log(object);
     this.form.patchValue(object);
   }
 

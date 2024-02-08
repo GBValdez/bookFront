@@ -66,9 +66,7 @@ export class InputAutocompleteComponent
     new EventEmitter();
   optionsFilter: any[] = [];
 
-  showErrors() {
-    console.log(this.form.errors);
-  }
+  showErrors() {}
   onTouch?: Function;
   onWrite?: Function;
 

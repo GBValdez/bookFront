@@ -19,6 +19,9 @@ import { InputAutocompleteComponent } from '@components/input-autocomplete/input
 import { CatalogueService } from '@services/catalogue.service';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { MatSelectModule } from '@angular/material/select';
+import { OnlyNumberInputModule } from '@directives/onlyNumberDir/only-number-input.module';
+import { formIsEmptyValidator } from '@utilsFunctions/utils';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-book-home',
@@ -40,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatNativeDateModule,
     InputAutocompleteComponent,
     MatSelectModule,
+    OnlyNumberInputModule,
   ],
   templateUrl: './book-home.component.html',
   styleUrl: './book-home.component.scss',
@@ -49,7 +53,8 @@ export class BookHomeComponent {
     private bookSvc: BookService,
     private router: Router,
     private fb: FormBuilder,
-    private catalogueSvc: CatalogueService
+    private catalogueSvc: CatalogueService,
+    private authSvc: AuthService
   ) {}
   bookList: bookDto[] = [];
   indexPage: number = 0;
@@ -57,14 +62,18 @@ export class BookHomeComponent {
   sizeBooks: number = 0;
   languagesOpts: catalogueInterface[] = [];
   categoriesOpts: catalogueInterface[] = [];
-  form: FormGroup = this.fb.group({
-    titleCont: [],
-    dateCreationGreat: [],
-    dateCreationSmall: [],
-    numPages: [],
-    languageId: [],
-    categoriesId: [],
-  });
+  canEdit: boolean = false;
+  form: FormGroup = this.fb.group(
+    {
+      titleCont: [],
+      dateCreationGreat: [],
+      dateCreationSmall: [],
+      numPages: [],
+      languageId: [],
+      categoriesId: [],
+    },
+    { validators: formIsEmptyValidator() }
+  );
   formValue: bookQueryFilter = {};
   cleanFilters() {
     this.form.patchValue({
@@ -80,15 +89,16 @@ export class BookHomeComponent {
   }
   searchBooks() {
     this.formValue = this.form.value;
-    if (this.formValue.dateCreationGreat) {
-      this.formValue.dateCreationGreat.setHours(23, 59, 59, 999);
-    }
-    console.log('limpia', this.formValue);
+    if (this.formValue.dateCreationSmall)
+      this.formValue.dateCreationSmall.setHours(23, 59, 59, 999);
 
     this.getBooks(1, 10);
   }
 
   ngOnInit(): void {
+    if (this.authSvc.getAuth()) {
+      this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
+    }
     this.getBooks(1, 10);
     this.catalogueSvc.get('language').subscribe((res) => {
       this.languagesOpts = res;
@@ -104,12 +114,10 @@ export class BookHomeComponent {
   }
 
   getBooks(pageNumber: number, pageSize: number) {
-    console.log('valores', this.formValue);
     this.bookSvc.getAll(pageNumber, pageSize, this.formValue).subscribe(
       (res) => {
         this.bookList = res.items;
         this.sizeBooks = res.total;
-        console.log('xd', this.bookList);
       },
       (error) => {
         this.formValue = {};

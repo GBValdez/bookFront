@@ -34,14 +34,13 @@ export class InterceptorService implements HttpInterceptor {
     const cloneRequest = req.clone({
       headers: req.headers.set(
         'Authorization',
-        `Bearer ${this.authService.auth?.token}`
+        `Bearer ${this.authService.getAuth()?.token}`
       ),
       params,
     });
     this.spinnerSvc.show();
     return next.handle(cloneRequest).pipe(
       catchError((error: any) => {
-        console.log('errorSensual', error);
         if (error.status === 401) {
           this.authService.logout();
         }

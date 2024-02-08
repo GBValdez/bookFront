@@ -23,9 +23,7 @@ export class BookEditComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.id = this.actRoute.snapshot.params['id'];
-    console.log('id', this.id);
     this.bookSvc.get(this.id).subscribe((res) => {
-      console.log('res', res);
       this.formBook.form.patchValue({
         title: res.title,
         dateCreation: res.dateCreation,

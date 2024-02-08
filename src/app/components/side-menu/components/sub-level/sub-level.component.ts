@@ -1,21 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { clickType, sideMenuInterface } from '../../side-menu.interface';
+import {
+  clickType,
+  sideMenuInterface,
+  sideMenuInterfaceInternal,
+} from '../../side-menu.interface';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-sub-level',
   templateUrl: './sub-level.component.html',
   styleUrls: ['./sub-level.component.css'],
+  standalone: true,
+  imports: [MatIconModule, NgClass, NgStyle],
 })
 export class SubLevelComponent implements OnInit {
-  @Input() buttons: sideMenuInterface[] = [];
+  @Input() buttons: sideMenuInterfaceInternal[] = [];
   @Input() showElementsObs!: Observable<boolean>;
   @Input() collapseObs!: Observable<boolean>;
   @Input() level: number = 0;
   showElements!: boolean;
   collapse!: boolean;
-  buttonOpenedChildren?: sideMenuInterface;
+  buttonOpenedChildren?: sideMenuInterfaceInternal;
   hideButton(button: sideMenuInterface): boolean {
     if (button.child && button.show === undefined) {
       return button.child.some((child) => this.hideButton(child));
@@ -23,7 +31,7 @@ export class SubLevelComponent implements OnInit {
     return button.show ?? false;
   }
 
-  click(button: sideMenuInterface, click?: clickType) {
+  click(button: sideMenuInterfaceInternal, click?: clickType) {
     if (click)
       if (typeof click == 'string') {
         this.route.navigate([click]);

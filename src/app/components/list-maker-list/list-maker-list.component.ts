@@ -38,7 +38,6 @@ export class ListMakerListComponent implements ControlValueAccessor {
   onWrite?: Function;
   inputControl = new FormControl();
   writeValue(obj: catalogueInterface[]): void {
-    console.log('esc', obj);
     if (obj) {
       this.itemsSelected = obj;
       this.onWrite?.(this.itemsSelected.map((el) => el.id));

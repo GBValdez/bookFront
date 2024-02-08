@@ -13,6 +13,7 @@ export const routes: Routes = [
       import('@pages/home/home.component').then((m) => m.HomeComponent),
     canActivate: [AuthGuard],
     data: { isProtect: 30 },
+    title: 'Home',
   },
   {
     path: 'books',
@@ -21,7 +22,8 @@ export const routes: Routes = [
         (m) => m.BookHomeComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 25 },
+    title: 'Libros',
   },
   {
     path: 'books/create',
@@ -31,6 +33,7 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20 },
+    title: 'Crear libro',
   },
   {
     path: 'books/edit/:id',
@@ -40,6 +43,7 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20 },
+    title: 'Editar libro',
   },
   {
     path: 'books/detail/:id',
@@ -48,7 +52,8 @@ export const routes: Routes = [
         (m) => m.BookDetailComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 25 },
+    title: 'Detalle libro',
   },
   {
     path: 'authors',
@@ -57,7 +62,8 @@ export const routes: Routes = [
         (m) => m.AuthorHomeComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 25 },
+    title: 'Autores',
   },
   {
     path: 'authors/create',
@@ -67,6 +73,7 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+    title: 'Crear autor',
   },
   {
     path: 'authors/edit/:id',
@@ -76,6 +83,7 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+    title: 'Editar autor',
   },
   {
     path: 'authors/detail/:id',
@@ -84,6 +92,7 @@ export const routes: Routes = [
         (m) => m.AuthorDetailComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+    data: { isProtect: 25 },
+    title: 'Detalle autor',
   },
 ];

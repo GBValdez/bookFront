@@ -57,11 +57,17 @@ export class BookDetailComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.actRoute.snapshot.params['id'];
     this.getBook();
+    if (this.authSvc.getAuth()) {
+      this.canComment = true;
+      this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
+    }
   }
   book!: bookDto;
   comments: commentsDto[] = [];
   indexComments: number = 1;
   numPageComments!: number;
+  canComment: boolean = false;
+  canEdit: boolean = false;
   getBook() {
     this.bookSvc.get(this.id, true).subscribe((book) => {
       this.book = book;
@@ -79,7 +85,6 @@ export class BookDetailComponent implements OnInit {
       });
       this.comments = [...this.comments, ...resFiltered];
       this.numPageComments = res.totalPages;
-      console.log(this.numPageComments, this.indexComments);
     });
   }
 
@@ -157,9 +162,8 @@ export class BookDetailComponent implements OnInit {
             icon: 'success',
           });
           this.form.patchValue({ content: '' });
-          res.user = { userName: this.authSvc.auth!.userName!, email: '' };
+          res.user = { userName: this.authSvc.getAuth()!.userName!, email: '' };
           this.comments = [...this.comments, res];
-          console.log('respuesta', res);
         });
     }
   }

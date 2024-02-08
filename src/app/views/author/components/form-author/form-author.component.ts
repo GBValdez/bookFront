@@ -63,7 +63,6 @@ export class FormAuthorComponent {
   ngOnInit(): void {
     this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
       this.countriesOpts = countries;
-      console.log(this.countriesOpts);
     });
   }
 
@@ -92,7 +91,6 @@ export class FormAuthorComponent {
   }
 
   clean(): void {
-    console.log(this.form.value);
     this.form.patchValue({
       name: '',
       birthDate: '',

@@ -115,6 +115,7 @@
         }
       </div>
     </section>
+    @if(canComment){
     <section>
       <form [formGroup]="form" (ngSubmit)="sendComment()">
         <mat-form-field class="w-full">
@@ -157,6 +158,10 @@
         </div>
       </form>
     </section>
+  }
+  @else {
+  <p class="w-full text-gray-500 font-bold text-lg text-center mt-2">Inicia sesión o regístrate para comentar</p>
+  }
   </mat-card-content>
 </mat-card>
 
@@ -169,9 +174,10 @@
         type="button"
         routerLink="/books"
       >
-        Cancelar
+        Cerrar
       </button>
-      <button
+      @if(canEdit){
+        <button
         mat-raised-button
         color="warn"
         class="ml-[5px] mt-[5px]"
@@ -189,6 +195,8 @@
       >
         Editar
       </button>
+      }
+     
     </section>
   </mat-card-content>
 </mat-card>

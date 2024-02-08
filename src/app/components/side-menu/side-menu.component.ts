@@ -7,14 +7,27 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { clickType, sideMenuInterface } from './side-menu.interface';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  clickType,
+  sideMenuInterface,
+  sideMenuInterfaceInternal,
+} from './side-menu.interface';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { SubLevelComponent } from './components/sub-level/sub-level.component';
 @Component({
   selector: 'app-side-menu',
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.css'],
+  standalone: true,
+  imports: [NgClass, RouterModule, SubLevelComponent],
 })
 export class SideMenuComponent implements OnInit {
   timeOut: any;
@@ -59,6 +72,7 @@ export class SideMenuComponent implements OnInit {
   constructor(private elementRef: ElementRef, private route: Router) {}
 
   ngOnInit(): void {
+    // console.log('buttonsMenu', this.buttons);
     // Suscribimos los valores de los sujetos
     this.showElements.subscribe((show) => {
       this.showElementsValue = show;
@@ -91,14 +105,14 @@ export class SideMenuComponent implements OnInit {
         });
       });
   }
-  routesActive: sideMenuInterface[] = [];
+  routesActive: sideMenuInterfaceInternal[] = [];
   getObsColapse(): Observable<boolean> {
     return this.collapse.asObservable();
   }
   getObsShowElements(): Observable<boolean> {
     return this.showElements.asObservable();
   }
-  tourChildren(route: sideMenuInterface) {
+  tourChildren(route: sideMenuInterfaceInternal) {
     route.present = false;
     if (route.child) {
       route.present = route.child.some((item) => this.tourChildren(item));
