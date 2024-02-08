@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
+import { UserVerifyEmailComponent } from '@pages/user/user-verify-email/user-verify-email.component';
 
 export const routes: Routes = [
   {
@@ -94,5 +95,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { isProtect: 25 },
     title: 'Detalle autor',
+  },
+  {
+    path: 'user/confirmEmail',
+    component: UserVerifyEmailComponent,
+    title: 'Verificar email',
+    data: { isProtect: 30 },
+    canActivate: [AuthGuard],
   },
 ];

@@ -4,6 +4,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+
 import { LoginService } from '@services/login.service';
 import {
   FormBuilder,
@@ -15,6 +17,7 @@ import { AuthService } from '@services/auth.service';
 import { authUserInterface } from '@interfaces/auth.inteface';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { UserCreateComponent } from '@pages/user/user-create/user-create.component';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +29,7 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatCheckboxModule,
     ReactiveFormsModule,
+    UserCreateComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -35,7 +39,8 @@ export class HomeComponent {
     private loginSvc: LoginService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -65,5 +70,11 @@ export class HomeComponent {
     } else {
       this.form.markAllAsTouched();
     }
+  }
+  createAccount() {
+    this.dialog.open(UserCreateComponent, {
+      width: '70%',
+      minWidth: '280px',
+    });
   }
 }
