@@ -37,11 +37,18 @@
           />
           <mat-error>El campo es <strong>requerido</strong></mat-error>
         </mat-form-field>
+
         <button mat-raised-button color="primary" type="submit">
           Iniciar Sesión
         </button>
       </form>
       <br />
+      <p
+        class="text-center text-gray-600 font-bold cursor-pointer"
+        (click)="forgotPassword()"
+      >
+        ¿Olvidaste tu contraseña?
+      </p>
       <p
         class="text-center text-gray-600 font-bold cursor-pointer"
         (click)="createAccount()"

@@ -18,4 +18,7 @@ export class UserService {
     const params = fixedQueryParams({ token, email });
     return this.httpClient.get(`${this.urlBase}/confirmEmail`, { params });
   }
+  forgotPassword(email: string): Observable<any> {
+    return this.httpClient.post(`${this.urlBase}/forgotPassword`, { email });
+  }
 }

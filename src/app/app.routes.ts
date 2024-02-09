@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
+import { ResetPasswordComponent } from '@pages/user/reset-password/reset-password.component';
 import { UserVerifyEmailComponent } from '@pages/user/user-verify-email/user-verify-email.component';
 
 export const routes: Routes = [
@@ -100,6 +101,13 @@ export const routes: Routes = [
     path: 'user/confirmEmail',
     component: UserVerifyEmailComponent,
     title: 'Verificar email',
+    data: { isProtect: 30 },
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'user/resetPassword/:gmail/:token',
+    component: ResetPasswordComponent,
+    title: 'Reiniciar contraseña',
     data: { isProtect: 30 },
     canActivate: [AuthGuard],
   },

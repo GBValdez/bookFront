@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,35 +8,33 @@ import { UserService } from '@services/user.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-user-create',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [
+    MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatFormFieldModule,
     MatButtonModule,
     MatDialogModule,
   ],
-  templateUrl: './user-create.component.html',
-  styleUrl: './user-create.component.scss',
+  templateUrl: './forgot-password.component.html',
+  styleUrl: './forgot-password.component.scss',
 })
-export class UserCreateComponent {
+export class ForgotPasswordComponent {
   constructor(
     private fb: FormBuilder,
     private userSvc: UserService,
-    private dialogRef: MatDialogRef<UserCreateComponent>
+    private dialogRef: MatDialogRef<ForgotPasswordComponent>
   ) {}
-  form: FormGroup = this.fb.group({
+  form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
-    userName: ['', [Validators.required]],
   });
-  createUser() {
+  forgotPassword() {
     if (this.form.valid) {
-      this.userSvc.createUser(this.form.value).subscribe((res) => {
+      this.userSvc.forgotPassword(this.form.value.email!).subscribe((res) => {
         Swal.fire({
-          title: 'Usuario creado',
-          text: 'Se ha enviado un correo de verificación a su email para activar su cuenta de usuario en la aplicación. Por favor, revise su bandeja de entrada',
+          title: 'Email enviado',
+          text: 'Si tu dirección de correo electrónico está registrada y activa en nuestro sistema, te enviaremos un enlace para restablecer tu contraseña muy pronto. ¡Estamos aquí para ayudarte!',
           icon: 'success',
         });
         this.dialogRef.close();

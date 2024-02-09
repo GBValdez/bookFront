@@ -18,6 +18,7 @@ import { authUserInterface } from '@interfaces/auth.inteface';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { UserCreateComponent } from '@pages/user/user-create/user-create.component';
+import { ForgotPasswordComponent } from '@pages/user/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +31,7 @@ import { UserCreateComponent } from '@pages/user/user-create/user-create.compone
     MatCheckboxModule,
     ReactiveFormsModule,
     UserCreateComponent,
+    ForgotPasswordComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -73,7 +75,13 @@ export class HomeComponent {
   }
   createAccount() {
     this.dialog.open(UserCreateComponent, {
-      width: '70%',
+      width: '40%',
+      minWidth: '280px',
+    });
+  }
+  forgotPassword() {
+    this.dialog.open(ForgotPasswordComponent, {
+      width: '40%',
       minWidth: '280px',
     });
   }
