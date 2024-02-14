@@ -50,7 +50,7 @@ export const routes: Routes = [
         (m) => m.BookCreateComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
     title: 'Crear libro',
   },
   {
@@ -60,7 +60,7 @@ export const routes: Routes = [
         (m) => m.BookEditComponent
       ),
     canActivate: [AuthGuard],
-    data: { isProtect: 20 },
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
     title: 'Editar libro',
   },
   {
@@ -91,6 +91,7 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+
     title: 'Crear autor',
   },
   {

@@ -29,7 +29,7 @@
             formControlName="dateCreationSmall"
           />
         </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
         <mat-datepicker-toggle
           matIconSuffix
           [for]="picker"
@@ -141,6 +141,7 @@
   <mat-paginator
     [length]="sizeBooks"
     [pageSize]="10"
+    [pageIndex]="indexPage"
     [pageSizeOptions]="[5, 10, 15, 20]"
     class="rounded-xl"
     (page)="changePagination($event)"

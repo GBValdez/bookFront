@@ -73,8 +73,12 @@ export class CataloguesHomeComponent implements OnInit {
     this.catalogueSvc
       .get(this.typeCatalogue, pageNumber + 1, pageSize, this.form.value, false)
       .subscribe((res) => {
-        this.catalogues = res.items;
-        this.catalogueSize = res.total;
+        if (res.total > 0) {
+          this.catalogues = res.items;
+          this.catalogueSize = res.total;
+        } else {
+          Swal.fire('No se encontraron registros', '', 'info');
+        }
       });
   }
   changePagination(event: PageEvent) {

@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { authorDto } from './author.interface';
 import { commentsDto } from './comments.interface';
 import { catalogueInterface } from './commons.interface';
@@ -24,8 +25,8 @@ export interface bookDto {
 
 export interface bookQueryFilter {
   titleCont?: string;
-  dateCreationGreat?: Date;
-  dateCreationSmall?: Date;
+  dateCreationGreat?: Moment;
+  dateCreationSmall?: Moment;
   numPages?: number;
   languageId?: number;
 }

@@ -14,7 +14,8 @@ import Swal from 'sweetalert2';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+
 import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
 import { CatalogueService } from '@services/catalogue.service';
 import { catalogueInterface } from '@interfaces/commons.interface';
@@ -22,7 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OnlyNumberInputModule } from '@directives/onlyNumberDir/only-number-input.module';
 import { formIsEmptyValidator } from '@utilsFunctions/utils';
 import { AuthService } from '@services/auth.service';
-
+import { convertMomentToDate } from '@utilsFunctions/formatDate';
 @Component({
   selector: 'app-book-home',
   standalone: true,
@@ -40,7 +41,6 @@ import { AuthService } from '@services/auth.service';
     ReactiveFormsModule,
     MatCardModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     InputAutocompleteComponent,
     MatSelectModule,
     OnlyNumberInputModule,
@@ -57,9 +57,11 @@ export class BookHomeComponent {
     private authSvc: AuthService
   ) {}
   bookList: bookDto[] = [];
+
   indexPage: number = 0;
   pageSize: number = 10;
   sizeBooks: number = 0;
+
   languagesOpts: catalogueInterface[] = [];
   categoriesOpts: catalogueInterface[] = [];
   canEdit: boolean = false;
@@ -76,6 +78,7 @@ export class BookHomeComponent {
   );
   formValue: bookQueryFilter = {};
   cleanFilters() {
+    console.log('cleanFilters', this.form.value);
     this.form.patchValue({
       titleCont: '',
       dateCreationGreat: '',
@@ -84,45 +87,60 @@ export class BookHomeComponent {
       languageId: '',
       categoriesId: '',
     });
+    this.indexPage = 0;
     this.formValue = {};
-    this.getBooks(1, 10);
+    this.getBooks(this.indexPage, this.pageSize);
   }
+
   searchBooks() {
     this.formValue = this.form.value;
-    if (this.formValue.dateCreationSmall)
-      this.formValue.dateCreationSmall.setHours(23, 59, 59, 999);
-
-    this.getBooks(1, 10);
+    if (this.formValue.dateCreationSmall) {
+      this.formValue.dateCreationSmall.set({
+        hour: 23,
+        minute: 59,
+        second: 59,
+      });
+    }
+    this.indexPage = 0;
+    this.getBooks(this.indexPage, this.pageSize);
   }
 
   ngOnInit(): void {
-    if (this.authSvc.getAuth()) {
+    if (this.authSvc.hasAuth()) {
       this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
     }
-    this.getBooks(1, 10);
+
+    this.getBooks(this.indexPage, this.pageSize);
+
     this.catalogueSvc.get('language', 1, 10).subscribe((res) => {
       this.languagesOpts = res.items;
     });
+
     this.catalogueSvc.get('category', 1, 10).subscribe((res) => {
       this.categoriesOpts = res.items;
     });
   }
+
   changePagination(event: PageEvent) {
     this.indexPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.getBooks(event.pageIndex + 1, event.pageSize);
+    this.getBooks(this.indexPage, this.pageSize);
   }
 
   getBooks(pageNumber: number, pageSize: number) {
-    this.bookSvc.getAll(pageNumber, pageSize, this.formValue).subscribe(
-      (res) => {
-        this.bookList = res.items;
-        this.sizeBooks = res.total;
-      },
-      (error) => {
-        this.formValue = {};
-      }
-    );
+    this.bookSvc
+      .getAll(pageNumber + 1, pageSize, this.formValue)
+      .subscribe((res) => {
+        if (res.total > 0) {
+          this.bookList = res.items;
+          this.sizeBooks = res.total;
+        } else {
+          Swal.fire({
+            title: 'No se encontraron libros',
+            icon: 'warning',
+          });
+        }
+      });
   }
   async deleteBook(book: bookDto) {
     const result = await Swal.fire({
@@ -134,7 +152,7 @@ export class BookHomeComponent {
     });
     if (result.isConfirmed) {
       this.bookSvc.delete(book.id).subscribe((res) => {
-        this.getBooks(this.indexPage + 1, this.pageSize);
+        this.getBooks(this.indexPage, this.pageSize);
         Swal.fire({
           title: 'El libro fue eliminado correctamente',
           icon: 'success',

@@ -57,7 +57,7 @@ export class BookDetailComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.actRoute.snapshot.params['id'];
     this.getBook();
-    if (this.authSvc.getAuth()) {
+    if (this.authSvc.hasAuth()) {
       this.canComment = true;
       this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
     }

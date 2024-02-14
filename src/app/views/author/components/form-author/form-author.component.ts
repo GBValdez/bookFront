@@ -19,6 +19,7 @@ import { authorCreation } from '@interfaces/author.interface';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { AuthorsService } from '@services/authors.service';
 import { CatalogueService } from '@services/catalogue.service';
+import { convertMomentToDate } from '@utilsFunctions/formatDate';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -30,7 +31,6 @@ import Swal from 'sweetalert2';
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     ReactiveFormsModule,
     InputAutocompleteComponent,
   ],
@@ -112,7 +112,8 @@ export class FormAuthorComponent {
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
       });
-      if (RES.isConfirmed) this.saveAuthorEvent.emit(this.form.value);
+      if (RES.isConfirmed)
+        this.saveAuthorEvent.emit(convertMomentToDate(this.form.value));
     } else this.form.markAllAsTouched();
   }
 }

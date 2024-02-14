@@ -21,7 +21,8 @@ import Swal from 'sweetalert2';
 export class AppComponent implements OnInit {
   constructor(private authSvc: AuthService) {}
   ngOnInit(): void {
-    this.authSvc.nextAuth(this.authSvc.getAuth());
+    if (this.authSvc.hasAuth()) this.authSvc.nextAuth(this.authSvc.getAuth());
+    else this.authSvc.nextAuth(null);
     this.authSvc.authObs.subscribe((res) => {
       this.buttonMenu = [...this.buttonMenuBasic];
       if (res) {

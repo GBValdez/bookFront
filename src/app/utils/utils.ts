@@ -1,19 +1,21 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { convertMomentToDate } from './formatDate';
 
 export const fixedQueryParams = (params: any) => {
   let paramsFinal: any = {};
-  for (let key in params) {
+  let paramsInit = convertMomentToDate(params);
+  for (let key in paramsInit) {
     if (
-      params[key] !== '' &&
-      params[key] !== null &&
-      params[key] !== undefined
+      paramsInit[key] !== '' &&
+      paramsInit[key] !== null &&
+      paramsInit[key] !== undefined
     ) {
-      if (params[key] instanceof Date) {
-        paramsFinal[key] = params[key].toISOString();
-      } else if (Array.isArray(params[key])) {
-        const array: any[] = params[key];
+      if (paramsInit[key] instanceof Date) {
+        paramsFinal[key] = paramsInit[key].toISOString();
+      } else if (Array.isArray(paramsInit[key])) {
+        const array: any[] = paramsInit[key];
         paramsFinal[key] = array.join(',');
-      } else paramsFinal[key] = params[key];
+      } else paramsFinal[key] = paramsInit[key];
     }
   }
   return paramsFinal;

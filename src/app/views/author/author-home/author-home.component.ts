@@ -13,13 +13,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { CatalogueService } from '@services/catalogue.service';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { InputAutocompleteComponent } from '@components/input-autocomplete/input-autocomplete.component';
-import { OnlyNumberInputModule } from '@directives/onlyNumberDir/only-number-input.module';
 import { formIsEmptyValidator } from '@utilsFunctions/utils';
 import { AuthService } from '@services/auth.service';
+import { convertMomentToDate } from '@utilsFunctions/formatDate';
 
 @Component({
   selector: 'app-author-home',
@@ -36,7 +35,6 @@ import { AuthService } from '@services/auth.service';
     ReactiveFormsModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     InputAutocompleteComponent,
   ],
   templateUrl: './author-home.component.html',
@@ -50,9 +48,11 @@ export class AuthorHomeComponent implements OnInit {
     private authSvc: AuthService
   ) {}
   listAuthors: authorDto[] = [];
+
   sizeAuthors: number = 0;
   indexPage: number = 0;
   pageSize: number = 10;
+
   countriesOpts: catalogueInterface[] = [];
   urlCatalogue = 'country';
   canAddAuthor: boolean = false;
@@ -74,45 +74,54 @@ export class AuthorHomeComponent implements OnInit {
       countryId: null,
     });
     this.formValues = {};
-    this.getAuthors(1, 10);
+    this.indexPage = 0;
+    this.getAuthors(this.indexPage, this.pageSize);
   }
 
   searchAuthors() {
+    this.indexPage = 0;
     this.formValues = this.form.value;
     if (this.formValues.birthDateSmall)
-      this.formValues.birthDateSmall.setHours(23, 59, 59, 999);
-
-    this.getAuthors(1, 10);
+      this.formValues.birthDateSmall.set({ hour: 23, minute: 59, second: 59 });
+    this.getAuthors(this.indexPage, this.pageSize);
   }
 
   ngOnInit(): void {
-    if (this.authSvc.getAuth())
+    if (this.authSvc.hasAuth())
       this.canAddAuthor = this.authSvc
         .getAuth()!
         .roles.includes('ADMINISTRATOR');
-    this.getAuthors(1, 10);
+
+    this.getAuthors(this.indexPage, this.pageSize);
+
     this.catalogueSvc
       .get(this.urlCatalogue, 1, 10, {})
       .subscribe((countries) => {
         this.countriesOpts = countries.items;
       });
   }
+
   getAuthors(pageNumber: number, pageSize: number) {
-    this.authorSvc.getAuthors(pageSize, pageNumber, this.formValues).subscribe(
-      (res) => {
-        this.listAuthors = res.items;
-        this.sizeAuthors = res.total;
-      },
-      (error) => {
-        this.formValues = {};
-      }
-    );
+    this.authorSvc
+      .getAuthors(pageSize, pageNumber + 1, this.formValues)
+      .subscribe((res) => {
+        if (res.total > 0) {
+          this.listAuthors = res.items;
+          this.sizeAuthors = res.total;
+        } else {
+          Swal.fire({
+            title: 'No se encontraron autores',
+            icon: 'warning',
+          });
+        }
+      });
   }
   changePagination(event: PageEvent) {
     this.indexPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.getAuthors(event.pageIndex + 1, event.pageSize);
+    this.getAuthors(this.indexPage, this.pageSize);
   }
+
   async deleteAuthor(author: authorDto) {
     const result = await Swal.fire({
       title: `'¿Desea eliminar el autor "${author.name}"?'`,
@@ -123,7 +132,7 @@ export class AuthorHomeComponent implements OnInit {
     });
     if (result.isConfirmed) {
       this.authorSvc.deleteAuthor(author.id).subscribe((res) => {
-        this.getAuthors(this.indexPage + 1, this.pageSize);
+        this.getAuthors(this.indexPage, this.pageSize);
         Swal.fire({
           title: 'El autor fue eliminado correctamente',
           icon: 'success',

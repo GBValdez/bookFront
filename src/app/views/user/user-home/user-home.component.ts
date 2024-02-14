@@ -68,8 +68,12 @@ export class UserHomeComponent implements OnInit {
 
   getUser(page: number, pageSize: number, filter?: userQueryFilter) {
     this.userAdminSvc.getUsers(pageSize, page, filter).subscribe((res) => {
-      this.users = res.items;
-      this.sizeUsers = res.total;
+      if (res.total > 0) {
+        this.users = res.items;
+        this.sizeUsers = res.total;
+      } else {
+        Swal.fire('No se encontraron usuarios', '', 'info');
+      }
     });
   }
 

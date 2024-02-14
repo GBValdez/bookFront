@@ -51,8 +51,10 @@ export class AuthService {
     return null;
   }
   logout() {
-    this.cookiesSvc.delete('auth');
-    this.authObs.next(null);
-    this.router.navigate(['/home']);
+    if (this.hasAuth()) {
+      this.cookiesSvc.delete('auth');
+      this.authObs.next(null);
+      this.router.navigate(['/home']);
+    }
   }
 }

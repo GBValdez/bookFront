@@ -20,6 +20,7 @@ import { bookCreationDto } from '@interfaces/book.interface';
 import { catalogueInterface } from '@interfaces/commons.interface';
 import { AuthorsService } from '@services/authors.service';
 import { CatalogueService } from '@services/catalogue.service';
+import { convertMomentToDate } from '@utilsFunctions/formatDate';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -157,7 +158,8 @@ export class FormBooksComponent implements OnInit {
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
       });
-      if (RES.isConfirmed) this.saveEvent.emit(this.form.value);
+      if (RES.isConfirmed)
+        this.saveEvent.emit(convertMomentToDate(this.form.value));
     } else {
       this.form.markAllAsTouched();
     }
