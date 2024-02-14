@@ -23,9 +23,56 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.authSvc.nextAuth(this.authSvc.getAuth());
     this.authSvc.authObs.subscribe((res) => {
+      this.buttonMenu = [...this.buttonMenuBasic];
       if (res) {
+        console.log('respuestaXD', res);
+
+        if (Array.isArray(res.roles) && res.roles.length > 0)
+          if (res.roles.some((x) => x == 'ADMINISTRATOR')) {
+            this.buttonMenu = [
+              ...this.buttonMenu,
+              {
+                text: 'Usuarios',
+                click: '/user/home',
+                icon: 'people',
+                show: true,
+              },
+              {
+                text: 'Catálogos',
+                child: [
+                  {
+                    text: 'Roles',
+                    click: '/catalogue/roles',
+                    icon: 'supervisor_account',
+                    show: true,
+                  },
+                  {
+                    text: 'Idiomas',
+                    click: '/catalogue/language',
+                    icon: 'translate',
+                    show: true,
+                  },
+                  {
+                    text: 'Paises',
+                    click: '/catalogue/country',
+                    icon: 'flag',
+                    show: true,
+                  },
+                  {
+                    text: 'Categorías',
+                    click: '/catalogue/category',
+                    icon: 'category',
+                    show: true,
+                  },
+                ],
+                icon: 'view_list',
+                show: true,
+              },
+            ];
+          }
+
         this.buttonMenu = [
-          ...this.buttonMenuBasic,
+          ...this.buttonMenu,
           {
             text: 'Cerrar Sesión',
             click: this.logout,
@@ -35,7 +82,7 @@ export class AppComponent implements OnInit {
         ];
       } else {
         this.buttonMenu = [
-          ...this.buttonMenuBasic,
+          ...this.buttonMenu,
           {
             text: 'Iniciar sesión',
             click: '/home',

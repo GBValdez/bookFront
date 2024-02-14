@@ -100,7 +100,7 @@ export class InputAutocompleteComponent
       const value = (event.target as HTMLInputElement).value;
       this.writingEvent.emit(value);
       this.currentValue = value;
-      const optConst: number | undefined = this.options.find(
+      const optConst: string | number | undefined = this.options.find(
         (opt) => opt.name.toLowerCase() === value.toLowerCase()
       )?.id;
       if (optConst) {

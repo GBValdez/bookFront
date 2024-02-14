@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
       //30 significa ruta protegida para usuarios no autenticados
 
       if (IS_PROTECT != 25) {
-        if (this.authSvc.getAuth()) {
+        if (this.authSvc.hasAuth()) {
           if (route.data['roles'] == undefined) pass = IS_PROTECT == 20;
           else {
             const roles = route.data['roles'] as string[];

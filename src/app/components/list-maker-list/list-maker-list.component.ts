@@ -40,7 +40,9 @@ export class ListMakerListComponent implements ControlValueAccessor {
   writeValue(obj: catalogueInterface[]): void {
     if (obj) {
       this.itemsSelected = obj;
-      this.onWrite?.(this.itemsSelected.map((el) => el.id));
+      setTimeout(() => {
+        this.onWrite?.(this.itemsSelected.map((el): string | number => el.id!));
+      }, 10);
     }
   }
   registerOnChange(fn: any): void {

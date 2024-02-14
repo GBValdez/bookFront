@@ -1,7 +1,18 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
-import { ResetPasswordComponent } from '@pages/user/reset-password/reset-password.component';
-import { UserVerifyEmailComponent } from '@pages/user/user-verify-email/user-verify-email.component';
+
+const createRouteCatalogue = (title: string, name: string): Route => {
+  return {
+    path: `catalogue/${name}`,
+    loadComponent: () =>
+      import(
+        `@pages/catalogues/catalogues-home/catalogues-home.component`
+      ).then((m) => m.CataloguesHomeComponent),
+    canActivate: [AuthGuard],
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'], titleShow: title },
+    title: title,
+  };
+};
 
 export const routes: Routes = [
   {
@@ -99,16 +110,44 @@ export const routes: Routes = [
   },
   {
     path: 'user/confirmEmail',
-    component: UserVerifyEmailComponent,
+    loadComponent: () =>
+      import('@pages/user/user-verify-email/user-verify-email.component').then(
+        (m) => m.UserVerifyEmailComponent
+      ),
     title: 'Verificar email',
     data: { isProtect: 30 },
     canActivate: [AuthGuard],
   },
   {
     path: 'user/resetPassword/:gmail/:token',
-    component: ResetPasswordComponent,
+    loadComponent: () =>
+      import('@pages/user/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent
+      ),
     title: 'Reiniciar contraseña',
     data: { isProtect: 30 },
     canActivate: [AuthGuard],
   },
+  {
+    path: 'user/home',
+    loadComponent: () =>
+      import('@pages/user/user-home/user-home.component').then(
+        (m) => m.UserHomeComponent
+      ),
+    title: 'Usuarios',
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+  },
+  {
+    path: 'user/edit/:userName',
+    loadComponent: () =>
+      import('@pages/user/user-edit/user-edit.component').then(
+        (m) => m.UserEditComponent
+      ),
+    title: 'Usuarios',
+    data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
+  },
+  createRouteCatalogue('Roles', 'roles'),
+  createRouteCatalogue('Idiomas', 'language'),
+  createRouteCatalogue('Países', 'country'),
+  createRouteCatalogue('Categorías', 'category'),
 ];

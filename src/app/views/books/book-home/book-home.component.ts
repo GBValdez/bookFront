@@ -100,11 +100,11 @@ export class BookHomeComponent {
       this.canEdit = this.authSvc.getAuth()!.roles.includes('ADMINISTRATOR');
     }
     this.getBooks(1, 10);
-    this.catalogueSvc.get('language').subscribe((res) => {
-      this.languagesOpts = res;
+    this.catalogueSvc.get('language', 1, 10).subscribe((res) => {
+      this.languagesOpts = res.items;
     });
-    this.catalogueSvc.get('category').subscribe((res) => {
-      this.categoriesOpts = res;
+    this.catalogueSvc.get('category', 1, 10).subscribe((res) => {
+      this.categoriesOpts = res.items;
     });
   }
   changePagination(event: PageEvent) {

@@ -1,5 +1,5 @@
 export interface catalogueInterface {
-  id?: number;
+  id?: number | string;
   name: string;
 }
 export interface pagDto<T> {

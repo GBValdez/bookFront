@@ -61,8 +61,8 @@ export class FormAuthorComponent {
   ) {}
   urlCatalogue = 'country';
   ngOnInit(): void {
-    this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
-      this.countriesOpts = countries;
+    this.catalogueSvc.get(this.urlCatalogue, 1, 10).subscribe((countries) => {
+      this.countriesOpts = countries.items;
     });
   }
 

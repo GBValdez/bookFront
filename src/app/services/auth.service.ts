@@ -25,6 +25,10 @@ export class AuthService {
     this.authObs.next(auth);
   }
 
+  hasAuth(): boolean {
+    return this.cookiesSvc.check('auth');
+  }
+
   setAuth(newAuth: authUserInterface) {
     const authBody = AES.encrypt(
       JSON.stringify(newAuth),

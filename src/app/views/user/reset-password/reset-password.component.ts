@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { UserService } from '@services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reset-password',
@@ -27,8 +29,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 })
 export class ResetPasswordComponent implements OnInit {
   passwordEqual: ValidatorFn = (control) => {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
+    const password = control.get('password')!.value;
+    const confirmPassword = control.get('confirmPassword')!.value;
     if (password === confirmPassword) return null;
     else return { noIgual: true };
   };
@@ -40,16 +42,18 @@ export class ResetPasswordComponent implements OnInit {
           Validators.pattern(
             '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$'
           ),
+          Validators.required,
         ],
       ],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
     },
-    { validators: this.passwordEqual }
+    { validators: this.passwordEqual.bind(this) }
   );
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private userSvc: UserService
   ) {}
   gmail: string = '';
   token: string = '';
@@ -58,9 +62,28 @@ export class ResetPasswordComponent implements OnInit {
     this.gmail = this.activateRoute.snapshot.params['gmail'];
     this.token = this.activateRoute.snapshot.params['token'];
   }
-  resetPassword() {
+  async resetPassword() {
     if (this.form.valid) {
-      console.log('Reset password');
+      const res = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Deseas cambiar tu contraseña?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No',
+      });
+      if (res.isConfirmed) {
+        this.userSvc
+          .resetPassword(this.token, this.gmail, this.form.value.password!)
+          .subscribe((res) => {
+            Swal.fire({
+              title: 'Contraseña cambiada',
+              text: 'Tu contraseña ha sido cambiada con éxito',
+              icon: 'success',
+            });
+            this.router.navigate(['/home']);
+          });
+      }
     }
   }
 }

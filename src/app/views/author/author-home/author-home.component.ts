@@ -91,8 +91,8 @@ export class AuthorHomeComponent implements OnInit {
         .getAuth()!
         .roles.includes('ADMINISTRATOR');
     this.getAuthors(1, 10);
-    this.catalogueSvc.get(this.urlCatalogue).subscribe((countries) => {
-      this.countriesOpts = countries;
+    this.catalogueSvc.get(this.urlCatalogue, 1, 10).subscribe((countries) => {
+      this.countriesOpts = countries.items;
     });
   }
   getAuthors(pageNumber: number, pageSize: number) {

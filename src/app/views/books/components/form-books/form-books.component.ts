@@ -49,11 +49,11 @@ export class FormBooksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalogueSvc.get('language').subscribe((res) => {
-      this.optLanguages = res;
+    this.catalogueSvc.get('language', 1, 10).subscribe((res) => {
+      this.optLanguages = res.items;
     });
-    this.catalogueSvc.get('category').subscribe((res) => {
-      this.optCategories = res;
+    this.catalogueSvc.get('category', 1, 10).subscribe((res) => {
+      this.optCategories = res.items;
     });
   }
 
