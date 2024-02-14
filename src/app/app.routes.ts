@@ -9,7 +9,12 @@ const createRouteCatalogue = (title: string, name: string): Route => {
         `@pages/catalogues/catalogues-home/catalogues-home.component`
       ).then((m) => m.CataloguesHomeComponent),
     canActivate: [AuthGuard],
-    data: { isProtect: 20, roles: ['ADMINISTRATOR'], titleShow: title },
+    data: {
+      isProtect: 20,
+      roles: ['ADMINISTRATOR'],
+      titleShow: title,
+      typeCatalogue: name,
+    },
     title: title,
   };
 };
@@ -146,7 +151,7 @@ export const routes: Routes = [
     title: 'Usuarios',
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
   },
-  createRouteCatalogue('Roles', 'roles'),
+  createRouteCatalogue('Roles', 'rol'),
   createRouteCatalogue('Idiomas', 'language'),
   createRouteCatalogue('Países', 'country'),
   createRouteCatalogue('Categorías', 'category'),

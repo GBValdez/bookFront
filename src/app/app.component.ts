@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
                 child: [
                   {
                     text: 'Roles',
-                    click: '/catalogue/roles',
+                    click: '/catalogue/rol',
                     icon: 'supervisor_account',
                     show: true,
                   },

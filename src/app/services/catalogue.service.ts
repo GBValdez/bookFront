@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { catalogueInterface, pagDto } from '@interfaces/commons.interface';
+import {
+  catalogueInterface,
+  catalogueQuery,
+  pagDto,
+} from '@interfaces/commons.interface';
 import { fixedQueryParams } from '@utilsFunctions/utils';
 import { Observable } from 'rxjs';
 
@@ -15,9 +19,15 @@ export class CatalogueService {
     catalogue: string,
     pageNumber: number,
     pageSize: number,
+    query?: catalogueQuery,
     all: boolean = true
   ): Observable<pagDto<catalogueInterface>> {
-    const params: any = fixedQueryParams({ all });
+    const params: any = fixedQueryParams({
+      all,
+      pageNumber,
+      pageSize,
+      ...query,
+    });
     return this.http.get<pagDto<catalogueInterface>>(
       `${this.baseUrl}/${catalogue}`,
       {
@@ -34,5 +44,20 @@ export class CatalogueService {
       `${this.baseUrl}/${catalogue}`,
       newCatalogue
     );
+  }
+
+  update(
+    id: string | number,
+    catalogue: string,
+    newCatalogue: catalogueInterface
+  ): Observable<catalogueInterface> {
+    return this.http.put<catalogueInterface>(
+      `${this.baseUrl}/${catalogue}/${id}`,
+      newCatalogue
+    );
+  }
+
+  delete(id: string | number, catalogue: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${catalogue}/${id}`);
   }
 }
