@@ -91,7 +91,6 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
     data: { isProtect: 20, roles: ['ADMINISTRATOR'] },
-
     title: 'Crear autor',
   },
   {
